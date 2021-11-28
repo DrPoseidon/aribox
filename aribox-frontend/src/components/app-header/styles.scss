@@ -1,0 +1,36 @@
+.app-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &__logo {
+    width: 200px;
+    height: 200px;
+  }
+
+  &__links {
+    display: inline-block;
+    &-link {
+      font-size: 30px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--color-black);
+      transition: 0.3s linear;
+
+      &-login{
+        border: 1px solid var(--color-brown);
+        padding: 5px;
+
+        &:hover{
+          background-color: var(--color-brown);
+          color: var(--color-white) !important;
+        }
+      }
+
+      &:hover {
+        color: var(--color-brown);
+      }
+    }
+  }
+}

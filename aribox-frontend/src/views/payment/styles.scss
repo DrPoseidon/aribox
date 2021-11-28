@@ -1,0 +1,116 @@
+.payment {
+  background-color: var(--color-white);
+  width: 100%;
+  height: 100%;
+
+  input {
+    height: 30px;
+    font-size: 20px;
+    box-sizing: border-box;
+  }
+
+  .error {
+    border: 1px solid var(--color-red);
+  }
+
+  .card {
+    width: 35%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__card{
+    &-main {
+      z-index: 2;
+      position: relative;
+      padding: 30px;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-dropdown-2);
+      border-radius: 8px;
+
+      &-logo{
+        width: 80px;
+        filter: invert(1);
+        position: absolute;
+      }
+
+      &-card-number{
+        margin-bottom: 55px;
+        margin-top: 140px;
+      }
+
+      div{
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        div{
+          display: flex;
+          flex-direction: row;
+          position: relative;
+
+          span {
+            position: absolute;
+            top: -50px;
+            font-size: 20px;
+            color: var(--color-white);
+          }
+
+          .payment__card-date{
+            max-width: 50px;
+          }
+        }
+      }
+
+
+    }
+
+    &-additional {
+      position: relative;
+      height: 263px;
+      padding: 30px;
+      max-width: 500px;
+      top: -263px;
+      left: 130px;
+      background-color: var(--color-dropdown);
+      border-radius: 8px;
+
+      &-cvc{
+        position: absolute;
+        right: 30px;
+        width: 90px;
+        bottom: 150px;
+      }
+
+      span {
+        color: var(--color-white);
+        position: absolute;
+        right: 17px;
+        bottom: 90px;
+        width: 100px;
+      }
+
+      &-button {
+        cursor: pointer;
+        outline: none;
+        border: 1px solid var(--color-black);
+        padding: 10px;
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        transition: .2s linear;
+
+        &:hover {
+          background-color: #9b7762;
+        }
+      }
+    }
+  }
+
+}
