@@ -1,23 +1,23 @@
-import api from '../api';
+import AuthApi from '../api/AuthApi';
 
 export default  class AuthService {
   static async login(email, password){
-    return await api.post('/login', {email, password});
+    return await AuthApi.post('/login', {email, password});
   }
 
   static async registration(email, name, password){
-    return api.post('/registration', {email, name, password});
+    return await AuthApi.post('/registration', {email, name, password});
   }
 
   static async checkAuth(){
-    return api.post('/checkAuth');
+    return await AuthApi.post('/checkAuth');
   }
 
   static async refresh() {
-    return api.post('/refresh');
+    return await AuthApi.post('/refresh');
   }
 
   static async logout(){
-    return api.post('/logout');
+    return await AuthApi.post('/logout');
   }
 }

@@ -1,10 +1,33 @@
-const {Product} = require('../db');
+const {Product, ColorModel, CommonImage, Size} = require('../db');
 const uuid = require('uuid');
 
 class ProductService {
   async getAllProducts() {
     try{
-      return await Product.findAll();
+      let products = await Product.findAll();
+
+      products =  products.reduce((acc, product) => {
+        acc.push({
+          id: product.productid,
+          name: product.title,
+          mainImage: product.mainimage,
+          materials: product.materials,
+          description: product.description,
+          price: product.price,
+          discount: product.discount
+        })
+        return acc;
+      }, []);
+
+      let newProducts = []
+
+      for (const product of products) {
+        const {cm, ci, s}= await this.findAdditionalInfoByProductId(product.id);
+
+        newProducts.push({...product, colorModel: cm, commonImages: ci, sizes: s});
+      }
+
+      return newProducts;
     } catch (e) {
       console.log(e)
     }
@@ -12,7 +35,20 @@ class ProductService {
 
   async getProductById(id) {
     try{
-      return await Product.findByPk(id);
+      let product =  await Product.findByPk(id);
+
+      product = {
+        id: product.productid,
+        name: product.title,
+        mainImage: product.mainimage,
+        materials: product.materials,
+        description: product.description,
+        price: product.price,
+        discount: product.discount
+      };
+
+      const {cm, ci, s} = await this.findAdditionalInfoByProductId(product.id);
+      return {...product, colorModel: cm, commonImages: ci, sizes: s};
     } catch (e) {
       console.log(e)
     }
@@ -49,6 +85,46 @@ class ProductService {
     } else{
       return {status: 400, data: {message: 'Не найден товар по указанному id'}};
     }
+  }
+
+  async findAdditionalInfoByProductId(id) {
+    const colorModel = await ColorModel.findAll({where: {productid: id}});
+    const commonImages = await CommonImage.findAll({where: {productid: id}});
+    const sizes = await Size.findAll({where: {productid: id}});
+    let cm = [];
+    let ci = [];
+    let s = [];
+
+    if(colorModel.length) {
+      cm = colorModel.reduce((acc, el) => {
+        let {dataValues: {colormodelid, colorcode, image, colorname}} = el;
+        acc.push({colorModelId: colormodelid, image, color: {name: colorname, code: colorcode}});
+
+        return acc
+      },[])
+    }
+
+    if(commonImages.length) {
+      ci = commonImages.reduce((acc, el) => {
+        let {dataValues: {commonimageid, url}} = el;
+        acc.push({commonImageId: commonimageid, url});
+
+        return acc
+      },[])
+    }
+
+    if(sizes.length) {
+      console.log(sizes)
+
+      s = sizes.reduce((acc, el) => {
+        let {dataValues: {sizeid, size}} = el;
+        acc.push({sizeId: sizeid, value: size});
+
+        return acc
+      },[])
+    }
+
+    return {cm, ci, s}
   }
 }
 

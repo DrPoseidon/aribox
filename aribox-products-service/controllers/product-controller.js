@@ -4,7 +4,6 @@ class ProductController {
   async getAllProducts(req,res) {
     try {
       const products = await ProductService.getAllProducts();
-
       res.status(200).json(products);
     } catch(e) {
       console.log(e);
@@ -13,9 +12,10 @@ class ProductController {
 
   async getProductById(req,res) {
     try {
+      console.log(req.params.id)
       const {id} = req.params;
       const products = await ProductService.getProductById(id);
-
+      console.log(products);
       res.status(200).json(products);
     } catch(e) {
       console.log(e);

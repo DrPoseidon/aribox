@@ -5,7 +5,7 @@ const api = axios.create({
   withCredentials: true,
   baseURL: API_URL,
   headers: {
-    "Access-Control-Allow-Origin": "*",
+    'Access-Control-Allow-Origin': '*',
     'Authorization': `Bearer ${localStorage.getItem('token')}`
   }
 });
