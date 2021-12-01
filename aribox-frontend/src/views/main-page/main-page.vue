@@ -1,8 +1,8 @@
 <template>
   <div class="main-page">
     <div class="main-page__products">
-      <TransitionComponent
-        ><template>
+      <TransitionComponent>
+        <template>
           <Loader :isLoading="isLoading" v-if="isLoading"/>
           <div class="main-page__products-list" v-else>
             <Product
@@ -10,7 +10,9 @@
               class="main-page__products-list-product"
               v-for="product in products"
               :key="product.id"
-            /></div></template
+            />
+          </div>
+      </template
       ></TransitionComponent>
     </div>
   </div>
@@ -43,7 +45,7 @@ export default {
     async getProducts() {
       const res = await this.GET_PRODUCTS();
       if (res) {
-        this.products = res;
+        this.products = res.data;
       }
     }
   },
@@ -51,7 +53,10 @@ export default {
   async mounted() {
     this.isLoading = true;
     await this.getProducts();
-    this.isLoading = false;
+
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500)
   }
 };
 </script>

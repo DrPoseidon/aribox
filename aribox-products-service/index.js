@@ -6,9 +6,11 @@ const {sequelize} = require('./db');
 const PORT = process.env.PORT || 7000;
 const app = express();
 
+app.use(cors({
+  origin: process.env.CLIENT_URL
+}));
 app.use(express.json());
 app.use('/api', router);
-
 
 const start = async () => {
   try{

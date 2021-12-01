@@ -1,27 +1,22 @@
-import {products} from './stubs';
-import AuthService from "../services/AuthService";
+import {AuthService, ProductsService} from '../services'
 
 export default {
-  GET_PRODUCTS() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        products.length ? resolve(products) : reject(404);
-      }, 1000);
-    });
+  async GET_PRODUCTS() {
+    try{
+      const response = await ProductsService.getAllProducts();
+      return {data: response.data, status: response.status};
+    } catch(e) {
+      console.log(e);
+    }
   },
 
-  GET_PRODUCT(context, id) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (products.length) {
-          const product = products.find((product) => {
-            return id === product.id;
-          });
-
-          product ? resolve(product) : reject(404);
-        }
-      }, 1000);
-    });
+  async GET_PRODUCT(context, id) {
+    try {
+      const response = await ProductsService.getProductById(id);
+      return {data: response.data, status: response.status};
+    } catch(e) {
+      console.log(e);
+    }
   },
 
   async REGISTRATION(context, data) {
@@ -48,7 +43,6 @@ export default {
       return {error: e.response?.data?.message}
     }
   },
-
 
   async REFRESH({commit}) {
     try {

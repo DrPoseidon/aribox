@@ -45,5 +45,6 @@ a {
 }
 #app {
   font-family: 'Cormorant', sans-serif;
+  margin: 0 40px;
 }
 </style>

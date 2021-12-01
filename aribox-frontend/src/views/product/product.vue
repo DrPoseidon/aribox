@@ -19,7 +19,7 @@
             />
           </div>
 
-          <Swiper ref="swiper" :options="swiperOptions" class="swiper">
+          <Swiper ref="swiper" :options="swiperOptions" class="swiper" v-if="images.length">
             <SwiperSlide v-for="img in images" :key="img" class="swiper-slide"
               ><img :src="img" class="swiper-img"
             /></SwiperSlide>
@@ -59,13 +59,13 @@
             >
               материал: {{ product.materials }}
             </p>
-            <div v-if="product.size">
+            <div v-if="isProductSizes">
               <p
-                v-for="size in product.size"
-                :key="size"
+                v-for="size in product.sizes"
+                :key="size.sizeId"
                 class="product__main-block-info-size"
               >
-                размер: {{ size }}
+                размер: {{ size.value }}
               </p>
             </div>
             <p
@@ -122,9 +122,9 @@ export default {
 
     async getProduct() {
       const res = await this.GET_PRODUCT(this.$route.params.id);
-      if (res) {
-        this.product = res;
-        this.selectedColorModel = res.mainImage;
+      if (res.status === 200) {
+        this.product = res.data;
+        this.selectedColorModel = res.data?.mainImage;
       }
     },
 
@@ -136,6 +136,10 @@ export default {
   },
 
   computed: {
+    isProductSizes() {
+      return this.product?.sizes?.length
+    },
+
     swiperOptions() {
       return {
         spaceBetween: SWIPER_SPACE,
@@ -163,7 +167,15 @@ export default {
     },
 
     images() {
-      return [this.selectedColorModel, ...this.product.commonImages];
+      let images = [];
+
+      if(this.product?.commonImages?.length) {
+        images = this.product.commonImages.reduce((acc, image) => {
+          acc.push(image.url);
+          return acc;
+        },[]);
+      }
+      return [this.selectedColorModel, ...images];
     }
   },
 

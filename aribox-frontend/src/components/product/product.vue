@@ -11,7 +11,7 @@
           <div
             v-if="mouseOver"
             :style="{
-              backgroundImage: `url('${this.product.commonImages[0]}')`
+              backgroundImage: `url('${getHoverImage(product.commonImages[0])}')`
             }"
             class="product__mainImage-commonImage"
           />
@@ -108,6 +108,9 @@ export default {
       this.selectedColorModel = model;
       this.mainImage = model.image;
       this.dropdown = false;
+    },
+    getHoverImage(commonImage) {
+      return commonImage?.url;
     }
   },
 
