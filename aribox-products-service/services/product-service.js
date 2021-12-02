@@ -1,33 +1,29 @@
 const {Product, ColorModel, CommonImage, Size} = require('../db');
 const uuid = require('uuid');
+const {Op} = require('sequelize');
 
 class ProductService {
   async getAllProducts() {
     try{
-      let products = await Product.findAll();
-
-      products =  products.reduce((acc, product) => {
-        acc.push({
-          id: product.productid,
-          name: product.title,
-          mainImage: product.mainimage,
-          materials: product.materials,
-          description: product.description,
-          price: product.price,
-          discount: product.discount
-        })
-        return acc;
-      }, []);
-
-      let newProducts = []
-
-      for (const product of products) {
-        const {cm, ci, s}= await this.findAdditionalInfoByProductId(product.id);
-
-        newProducts.push({...product, colorModel: cm, commonImages: ci, sizes: s});
-      }
-
-      return newProducts;
+      return await Product.findAll({
+        include: [
+          {
+            as: 'sizes',
+            model: Size,
+            required: false, // left join,
+          },
+          {
+            as: 'colorModels',
+            model: ColorModel,
+            required: false,
+          },
+          {
+            as: 'commonImages',
+            model: CommonImage,
+            required: false,
+          }
+        ],
+      });
     } catch (e) {
       console.log(e)
     }
@@ -35,20 +31,25 @@ class ProductService {
 
   async getProductById(id) {
     try{
-      let product =  await Product.findByPk(id);
-
-      product = {
-        id: product.productid,
-        name: product.title,
-        mainImage: product.mainimage,
-        materials: product.materials,
-        description: product.description,
-        price: product.price,
-        discount: product.discount
-      };
-
-      const {cm, ci, s} = await this.findAdditionalInfoByProductId(product.id);
-      return {...product, colorModel: cm, commonImages: ci, sizes: s};
+      return await Product.findByPk(id, {
+        include: [
+          {
+            as: 'sizes',
+            model: Size,
+            required: false, // left join,
+          },
+          {
+            as: 'colorModels',
+            model: ColorModel,
+            required: false,
+          },
+          {
+            as: 'commonImages',
+            model: CommonImage,
+            required: false,
+          }
+        ],
+      });
     } catch (e) {
       console.log(e)
     }

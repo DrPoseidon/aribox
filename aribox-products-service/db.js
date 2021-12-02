@@ -23,6 +23,27 @@ const ColorModel = new DefineModel('colormodels', colorModel);
 const CommonImage = new DefineModel('commonimages', commonImage);
 const Size = new DefineModel('sizes', size);
 
+Product.hasMany(ColorModel, {
+  as: 'colorModels',
+  foreignKey: {
+    name: 'productId'
+  }
+});
+
+Product.hasMany(Size, {
+  as: 'sizes',
+  foreignKey: {
+    name: 'productId'
+  }
+});
+
+Product.hasMany(CommonImage, {
+  as: 'commonImages',
+  foreignKey: {
+    name: 'productId'
+  }
+});
+
 module.exports = {
   Product,
   ColorModel,

@@ -45,13 +45,13 @@
 
           <div class="product__main-block-info">
             <h2 class="product__main-block-info-title">
-              {{ product.title }}
+              {{ product.name }}
             </h2>
             <p
               v-if="product.description"
               class="product__main-block-info-description"
             >
-              {{ product.description }}
+              описание: {{ product.description }}
             </p>
             <p
               v-if="product.materials"
@@ -65,7 +65,7 @@
                 :key="size.sizeId"
                 class="product__main-block-info-size"
               >
-                размер: {{ size.value }}
+                размер: {{ size.size }}
               </p>
             </div>
             <p

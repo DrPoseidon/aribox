@@ -1,15 +1,21 @@
 const { DataTypes } = require('sequelize');
+const {sequelize, Product} = require('../db');
 
 module.exports = {
-  commonimageid: {
+  commonImageId: {
     type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
+    field: 'commonimageid'
   },
-  productid: {
+  productId: {
     type: DataTypes.STRING,
     allowNull: false,
-    foreignKey: true
+    references: {
+      model: Product,
+      key: 'productid'
+    },
+    field: 'productid'
   },
   url: {
     type: DataTypes.STRING,

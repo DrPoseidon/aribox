@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <router-link :to="{ name: 'product', params: { id: product.id } }">
+    <router-link :to="{ name: 'product', params: { id: product.productId } }">
       <div
         :style="{ backgroundImage: `url('${mainImage}')` }"
         class="product__mainImage"
@@ -18,7 +18,7 @@
         </transition>
       </div>
 
-      <h2>{{ product.title }}</h2>
+      <h2>{{ product.name }}</h2>
       <p
         class="product__price"
         style="margin-right:20px"
@@ -41,7 +41,7 @@
         @click="dropdown = !dropdown"
       >
         <img class="img" :src="selectedColorModel.image" />
-        {{ selectedColorModel.color.name }}
+        {{ selectedColorModel.colorName }}
         <img
           src="@/assets/icons/chevron-down.svg"
           :class="[{ '--rotate': dropdown }, 'product__dropdown-selected-icon']"
@@ -57,7 +57,7 @@
               class="product__dropdown-list-element"
             >
               <img class="img" :src="model.image" />
-              <p style="margin-right:10px">{{ model.color.name }}</p>
+              <p style="margin-right:10px">{{ model.colorName }}</p>
             </div>
           </div>
         </template></TransitionComponent
@@ -93,11 +93,11 @@ export default {
 
   computed: {
     isColorModel() {
-      return !!this.product?.colorModel;
+      return !!this.product?.colorModels;
     },
 
     getColorModel() {
-      return this.product.colorModel.filter((model) => {
+      return this.product.colorModels.filter((model) => {
         return model !== this.selectedColorModel;
       });
     }
@@ -116,7 +116,7 @@ export default {
 
   mounted() {
     if (this.isColorModel) {
-      this.selectedColorModel = this.product.colorModel[0];
+      this.selectedColorModel = this.product.colorModels[0];
     }
   }
 };

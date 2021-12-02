@@ -30,13 +30,14 @@ export default {
     }
   },
 
-  async LOGIN({commit}, data) {
+  async LOGIN(context, data) {
     try {
       const {email, password} = data;
       const response = await AuthService.login(email, password);
-      commit('SET_USER', response?.data?.userData?.user);
-      commit('SET_AUTH', true);
-      localStorage.setItem('token',response?.data?.userData?.tokens?.accessToken);
+      console.log(response);
+      // commit('SET_USER', response?.data?.userData?.user);
+      // commit('SET_AUTH', true);
+      // localStorage.setItem('token',response?.data?.userData?.tokens?.accessToken);
       return {status: response.status}
     } catch(e) {
       console.log(e.response?.data?.message);
@@ -46,6 +47,7 @@ export default {
 
   async REFRESH({commit}) {
     try {
+      console.log('refresh')
       const response = await AuthService.refresh();
       commit('SET_USER', response?.data?.userData?.user);
       commit('SET_AUTH', true);
@@ -59,11 +61,10 @@ export default {
 
   async CHECK_AUTH() {
     try {
-      const response = await AuthService.checkAuth();
-      return response.status;
+      return await AuthService.checkAuth();
     } catch(e) {
       console.log(e.response?.data?.message);
-      return e.response.status
+      return e.response
     }
   }
 };
