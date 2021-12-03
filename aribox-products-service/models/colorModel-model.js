@@ -1,26 +1,37 @@
 const { DataTypes } = require('sequelize');
+const {ProductModel} = require('../db');
 
 module.exports = {
-  colormodelid: {
-    type: DataTypes.STRING,
+  colorModelId: {
+    unique: true,
+    type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true,
+    field: 'colormodelid',
+    autoIncrement: true,
   },
-  productid: {
+  productId: { // внешний ключ
     type: DataTypes.STRING,
     allowNull: false,
-    foreignKey: true
+    references: {
+      model: ProductModel, // к какой модели принадлежит
+      key: 'productid' // название столбца модели
+    },
+    field: 'productid'
   },
-  colorcode: {
+  colorCode: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true,
+    field: 'colorcode'
   },
   image: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    field: 'image'
   },
-  colorname: {
+  colorName: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    field: 'colorname'
   }
 };

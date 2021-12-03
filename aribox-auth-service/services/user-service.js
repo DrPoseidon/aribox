@@ -87,14 +87,14 @@ class UserService {
    */
   async refresh(refreshToken) {
     if (!refreshToken) {
-      return {status: 401, data: {message: 'Пользователь не авторизован'}};
+      return {status: 401, data: {message: 'Пользователь не авторизован', reason: 'Не пришел рефреш токен'}};
     }
 
     const validation = TokenService.validateRefreshToken(refreshToken);
     const tokenData = await TokenService.findRefreshToken(refreshToken);
 
     if(!tokenData || !validation) {
-      return {status: 401, data: {message: 'Пользователь не авторизован'}};
+      return {status: 401, data: {message: 'Пользователь не авторизован', reason: 'Рефреш токен не прошел валидацию или не найден такой токен в бд'}};
     }
 
     const user = await UserModel.findById(tokenData.user);

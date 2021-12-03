@@ -4,7 +4,10 @@
       <TransitionComponent>
         <template>
           <Loader :isLoading="isLoading" v-if="isLoading"/>
-          <div class="main-page__products-list" v-else>
+
+          <h2 v-if="isError">Не удается загрузить товары</h2>
+
+          <div class="main-page__products-list" v-if="!isLoading && !isError">
             <Product
               :product="product"
               class="main-page__products-list-product"
@@ -36,18 +39,31 @@ export default {
   data() {
     return {
       isLoading: false,
+      isError: false,
       products: []
     };
   },
 
+  computed: {
+    isColorModel() {
+      return !!this.product?.colorModels.length;
+    },
+  },
+
   methods: {
     ...mapActions(['GET_PRODUCTS']),
+
     async getProducts() {
       const res = await this.GET_PRODUCTS();
       if (res) {
         this.products = res.data;
       }
-    }
+    },
+
+    setSelectedColorModel(model) {
+      this.selectedColorModel = model;
+      this.mainImage = model.image;
+    },
   },
 
   async mounted() {

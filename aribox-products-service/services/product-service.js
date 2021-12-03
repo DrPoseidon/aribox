@@ -1,130 +1,150 @@
-const {Product, ColorModel, CommonImage, Size} = require('../db');
+const {ProductModel, ColorModelModel, CommonImageModel, SizeModel} = require('../db');
 const uuid = require('uuid');
+const {Op} = require('sequelize');
+const ColorModelService = require('../services/colorModel-service');
+const SizeService = require('../services/size-service');
+const CommonImageService = require('../services/commonImage-service');
 
 class ProductService {
+  /**
+   * получение списка товаров из бд
+   * @returns {Promise<*>}
+   */
   async getAllProducts() {
     try{
-      let products = await Product.findAll();
-
-      products =  products.reduce((acc, product) => {
-        acc.push({
-          id: product.productid,
-          name: product.title,
-          mainImage: product.mainimage,
-          materials: product.materials,
-          description: product.description,
-          price: product.price,
-          discount: product.discount
-        })
-        return acc;
-      }, []);
-
-      let newProducts = []
-
-      for (const product of products) {
-        const {cm, ci, s}= await this.findAdditionalInfoByProductId(product.id);
-
-        newProducts.push({...product, colorModel: cm, commonImages: ci, sizes: s});
-      }
-
-      return newProducts;
+      return await ProductModel.findAll({
+        // inner
+        include: [
+          {
+            as: 'sizes',
+            model: SizeModel,
+            required: false, // left join,
+          },
+          {
+            as: 'colorModels',
+            model: ColorModelModel,
+            required: false,
+          },
+          {
+            as: 'commonImages',
+            model: CommonImageModel,
+            required: false,
+          }
+        ],
+      });
     } catch (e) {
-      console.log(e)
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
     }
   }
 
-  async getProductById(id) {
+  /**
+   * получение одного товара из списка по id
+   * @returns {Promise<*>}
+   * @param productId
+   */
+  async getProductById(productId) {
     try{
-      let product =  await Product.findByPk(id);
-
-      product = {
-        id: product.productid,
-        name: product.title,
-        mainImage: product.mainimage,
-        materials: product.materials,
-        description: product.description,
-        price: product.price,
-        discount: product.discount
-      };
-
-      const {cm, ci, s} = await this.findAdditionalInfoByProductId(product.id);
-      return {...product, colorModel: cm, commonImages: ci, sizes: s};
+      return await ProductModel.findByPk(productId, {
+        include: [
+          {
+            as: 'sizes',
+            model: SizeModel,
+            required: false, // left join,
+          },
+          {
+            as: 'colorModels',
+            model: ColorModelModel,
+            required: false,
+          },
+          {
+            as: 'commonImages',
+            model: CommonImageModel,
+            required: false,
+          }
+        ],
+      });
     } catch (e) {
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
+    }
+  }
+
+  /**
+   * обновление информации о товаре
+   * @param productId
+   * @param key
+   * @param value
+   * @returns {Promise<{data: {message: string}, status: number}>}
+   */
+  async updateProduct(productId, key, value) {
+    try {
+      const product = await ProductModel.findOne({where: {productId}});
+
+      if(product) {
+        if(product[key] === value) {
+          return {status: 400, data: {message: `Введите другое значение ${key}`}};
+        }else {
+            await product.update({[key]: value});
+            return {status: 200, data: {message: `Данные обновлены name = ${value}`}};
+        }
+      } else {
+        return {status: 404, data: {message: 'Не найден товар с указанным id'}};
+      }
+    } catch(e) {
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
+    }
+  }
+
+  /**
+   * создание товара
+   * @param name
+   * @param mainImage
+   * @param materials
+   * @param description
+   * @param price
+   * @param discount
+   * @returns {Promise<{data: {message: string}, status: number}>}
+   */
+  async createProduct(name, mainImage, materials, description, price, discount) {
+    try{
+      const product = await ProductModel.findOne({where: {name}});
+
+      if(!product){
+        const productId = uuid.v4()
+
+        await ProductModel.create({productId, name, mainImage, materials, description, price, discount});
+
+        return {status: 200, data: {message: 'Товар успешно добавлен', productId}};
+      } else{
+        return {status: 400, data: {message: 'Товар с указанным названием уже существует'}};
+      }
+    } catch(e) {
       console.log(e)
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
     }
   }
 
-  async updateProduct(id, key, value) {
-    const product = await Product.findOne({where: {productid: id}});
+  /**
+   * удаление товара
+   * @returns {Promise<{data: {message: string}, status: number}>}
+   * @param productId
+   */
+  async deleteProduct(productId) {
+    try {
 
-    if(product) {
-      await product.update({[key]: value});
-      return {status: 200, data: {message: 'Данные обновлены'}};
-    } else {
-      return {status: 404, data: {message: 'Не найден товар с указанным id'}};
+      await ColorModelService.deleteColorModels(productId);
+      await SizeService.deleteSizes(productId);
+      await CommonImageService.deleteCommonImages(productId);
+      const product = await ProductModel.findByPk(productId);
+      if(product){
+        await product.destroy();
+        return {status: 200, data: {message: 'Товар успешно удален'}};
+      } else{
+        return {status: 400, data: {message: 'Не найден товар по указанному id'}};
+      }
+    } catch(e) {
+      console.log(e);
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
     }
-  }
-
-  async createProduct(name, mainimage, materials, description, price, discount) {
-    const product = await Product.findOne({where: {'name': name}});
-
-    if(!product){
-      await Product.create({productid: uuid.v4(), name, mainimage, materials, description, price, discount});
-      return {status: 200, data: {message: 'Товар успешно добавлен'}};
-    } else{
-      return {status: 400, data: {message: 'Товар с указанным названием уже существует'}};
-    }
-  }
-
-  async deleteProduct(id) {
-    const product = await Product.findByPk(id);
-
-    if(product){
-      await product.destroy();
-      return {status: 200, data: {message: 'Товар успешно удален'}};
-    } else{
-      return {status: 400, data: {message: 'Не найден товар по указанному id'}};
-    }
-  }
-
-  async findAdditionalInfoByProductId(id) {
-    const colorModel = await ColorModel.findAll({where: {productid: id}});
-    const commonImages = await CommonImage.findAll({where: {productid: id}});
-    const sizes = await Size.findAll({where: {productid: id}});
-    let cm = [];
-    let ci = [];
-    let s = [];
-
-    if(colorModel.length) {
-      cm = colorModel.reduce((acc, el) => {
-        let {dataValues: {colormodelid, colorcode, image, colorname}} = el;
-        acc.push({colorModelId: colormodelid, image, color: {name: colorname, code: colorcode}});
-
-        return acc
-      },[])
-    }
-
-    if(commonImages.length) {
-      ci = commonImages.reduce((acc, el) => {
-        let {dataValues: {commonimageid, url}} = el;
-        acc.push({commonImageId: commonimageid, url});
-
-        return acc
-      },[])
-    }
-
-    if(sizes.length) {
-      console.log(sizes)
-
-      s = sizes.reduce((acc, el) => {
-        let {dataValues: {sizeid, size}} = el;
-        acc.push({sizeId: sizeid, value: size});
-
-        return acc
-      },[])
-    }
-
-    return {cm, ci, s}
   }
 }
 

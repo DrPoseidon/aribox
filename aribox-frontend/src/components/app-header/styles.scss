@@ -3,10 +3,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
+  margin-top: 10px;
 
   &__logo {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
   }
 
   &__links {
@@ -21,6 +23,7 @@
       &-login{
         border: 1px solid var(--color-brown);
         padding: 5px;
+        cursor: pointer;
 
         &:hover{
           background-color: var(--color-brown);

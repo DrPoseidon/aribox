@@ -34,9 +34,13 @@ export default {
     try {
       const {email, password} = data;
       const response = await AuthService.login(email, password);
-      commit('SET_USER', response?.data?.userData?.user);
+      const token = response?.data?.userData?.tokens?.accessToken
+      const user = response?.data?.userData?.user;
+
+      commit('SET_USER', user);
       commit('SET_AUTH', true);
-      localStorage.setItem('token',response?.data?.userData?.tokens?.accessToken);
+      localStorage.setItem('token', token);
+
       return {status: response.status}
     } catch(e) {
       console.log(e.response?.data?.message);
@@ -44,26 +48,51 @@ export default {
     }
   },
 
-  async REFRESH({commit}) {
+  async REFRESH() {
     try {
-      const response = await AuthService.refresh();
-      commit('SET_USER', response?.data?.userData?.user);
-      commit('SET_AUTH', true);
-      localStorage.setItem('token',response?.data?.userData?.tokens?.accessToken);
+      return await AuthService.refresh();
     } catch(e) {
-      commit('SET_AUTH', false);
-      commit('SET_USER', {});
-      console.log(e.response?.data?.message);
+      // console.log('REFRESH', e.response?.data?.message);
+      return e.response;
     }
   },
 
-  async CHECK_AUTH() {
+  async CHECK_AUTH({commit, state, dispatch}) {
     try {
-      const response = await AuthService.checkAuth();
-      return response.status;
+      const isAuth = await AuthService.checkAuth();
+
+      if (!state.isAuth && isAuth.status === 200) {
+        commit('SET_AUTH', true);
+      }
     } catch(e) {
-      console.log(e.response?.data?.message);
-      return e.response.status
+      // console.log('CHECK_AUTH', e.response?.data?.message);
+
+      const refreshData = await dispatch('REFRESH');
+
+      if(refreshData.status === 200) {
+        const token = refreshData.data.userData.tokens.accessToken;
+        localStorage.setItem('token', token);
+
+        commit('SET_AUTH', true);
+      }
+
+      if (state.isAuth && refreshData.status === 401) {
+        commit('SET_USER', {});
+        commit('SET_AUTH', false);
+      }
+    }
+  },
+
+  async LOGOUT({commit}) {
+    try {
+      await AuthService.logout();
+
+      commit('SET_USER', {});
+      commit('SET_AUTH', false);
+
+      return {status: 200};
+    } catch(e) {
+      console.log(e);
     }
   }
 };

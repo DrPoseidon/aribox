@@ -1,5 +1,5 @@
 <template>
-  <div class="app-app-header">
+  <div class="app-header">
     <img src="@/assets/img/logo.png" class="app-header__logo" />
 
     <div class="app-header__links">
@@ -15,15 +15,19 @@
         Название
       </router-link>
 
-      <router-link :to="{name: 'login'}" class="app-header__links-link app-header__links-link-login" v-if="!checkAuth">
+      <router-link :to="{ name: 'login' }" class="app-header__links-link app-header__links-link-login" v-if="!checkAuth">
         Войти
       </router-link>
+
+      <a @click="logout" class="app-header__links-link app-header__links-link-login" v-if="checkAuth">
+        Выйти
+      </a>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapState, mapActions} from 'vuex';
 
 export default {
   name: 'app-app-header',
@@ -33,6 +37,14 @@ export default {
 
     checkAuth() {
       return this.isAuth
+    }
+  },
+
+  methods: {
+    ...mapActions(['LOGOUT']),
+
+    async logout() {
+      await this.LOGOUT();
     }
   }
 };

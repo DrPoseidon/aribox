@@ -90,6 +90,12 @@
         }
       }
 
+      &-quantity {
+        margin-top: 20px;
+        font-size: 25px;
+        color: var(--color-red);
+      }
+
       &-description,
       &-material,
       &-size {
@@ -104,12 +110,7 @@
       }
 
       &-description {
-        font-family: 'Montserrat', sans-serif;
-        color: var(--color-brown);
-        font-family: 'Montserrat', sans-serif;
-        color: var(--color-brown);
         max-width: 300px;
-        font-family: sans-serif;
         margin-bottom: 20px;
       }
     }
