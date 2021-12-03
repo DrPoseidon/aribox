@@ -17,7 +17,7 @@ export default  class AuthService {
     return await AuthApi.post('/refresh');
   }
 
-  static async logout(){
-    return await AuthApi.post('/logout');
+  static async logout(email){
+    return await AuthApi.post('/logout', {email});
   }
 }
