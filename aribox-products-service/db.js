@@ -1,5 +1,4 @@
 const {Sequelize} = require('sequelize');
-// const product = require("./models/product-model");
 const {product, colorModel, commonImage, size} = require('./models')
 const sequelize = new Sequelize('new_aribox', 'postgres', '461385', {
   dialect: 'postgres',
@@ -18,26 +17,29 @@ class DefineModel{
   }
 }
 
-const Product = new DefineModel('products', product);
-const ColorModel = new DefineModel('colormodels', colorModel);
-const CommonImage = new DefineModel('commonimages', commonImage);
-const Size = new DefineModel('sizes', size);
+const ProductModel = new DefineModel('products', product);
+const ColorModelModel = new DefineModel('colormodels', colorModel);
+const CommonImageModel = new DefineModel('commonimages', commonImage);
+const SizeModel = new DefineModel('sizes', size);
 
-Product.hasMany(ColorModel, {
+// связь ProductModel c ColorModelModel один-ко-многим через foreignKey productId
+ProductModel.hasMany(ColorModelModel, {
   as: 'colorModels',
   foreignKey: {
     name: 'productId'
   }
 });
 
-Product.hasMany(Size, {
+// связь ProductModel c SizeModel один-ко-многим через foreignKey productId
+ProductModel.hasMany(SizeModel, {
   as: 'sizes',
   foreignKey: {
     name: 'productId'
   }
 });
 
-Product.hasMany(CommonImage, {
+// связь ProductModel c CommonImageModel один-ко-многим через foreignKey productId
+ProductModel.hasMany(CommonImageModel, {
   as: 'commonImages',
   foreignKey: {
     name: 'productId'
@@ -45,10 +47,10 @@ Product.hasMany(CommonImage, {
 });
 
 module.exports = {
-  Product,
-  ColorModel,
-  CommonImage,
-  Size,
+  ProductModel,
+  ColorModelModel,
+  CommonImageModel,
+  SizeModel,
   sequelize,
 };
 

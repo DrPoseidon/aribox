@@ -1,7 +1,13 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
-const router = require('./router');
+const {
+  productRouter,
+  commonImageRouter,
+  colorModelRouter,
+  sizeRouter,
+  apiRouter
+} = require('./routes');
 const {sequelize} = require('./db');
 const PORT = process.env.PORT || 7000;
 const app = express();
@@ -10,7 +16,11 @@ app.use(cors({
   origin: process.env.CLIENT_URL
 }));
 app.use(express.json());
-app.use('/api', router);
+app.use('/apiProduct', productRouter);
+app.use('/apiCommonImage', commonImageRouter);
+app.use('/apiColorModel', colorModelRouter);
+app.use('/apiSize', sizeRouter);
+app.use('/api', apiRouter);
 
 const start = async () => {
   try{

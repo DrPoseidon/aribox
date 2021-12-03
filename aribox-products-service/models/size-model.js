@@ -3,17 +3,18 @@ const {sequelize, Product} = require('../db');
 
 module.exports = {
   sizeId: {
+    unique: true,
     type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
     field: 'sizeid'
   },
-  productId: {
+  productId: { // внешний ключ
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: Product,
-      key: 'productid',
+      model: Product, // к какой модели принадлежит
+      key: 'productid', // название столбца в модели
     },
     field: 'productid'
   },

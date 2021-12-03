@@ -3,6 +3,7 @@ const {DataTypes} = require('sequelize');
 
 module.exports = {
   productId: {
+    unique: true,
     type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
