@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const {sequelize, Product} = require('../db');
+const {ProductModel} = require('../db');
 
 module.exports = {
   colorModelId: {
@@ -14,8 +14,7 @@ module.exports = {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: Product, // к какой модели принадлежит
-
+      model: ProductModel, // к какой модели принадлежит
       key: 'productid' // название столбца модели
     },
     field: 'productid'

@@ -1,0 +1,46 @@
+.color-model-select {
+  width: 100%;
+  margin-top: 10px;
+  font-size: 20px;
+  position: relative;
+
+  .img {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+  }
+
+  &-selected {
+    cursor: pointer;
+    &-icon {
+      transition: 0.3s;
+    }
+
+    .--rotate {
+      transform: rotate(180deg);
+    }
+  }
+
+  &-list {
+    transition: 0.3s;
+    margin-top: 10px;
+    position: absolute;
+    width: 100%;
+    &-element {
+      cursor: pointer;
+      transition: 0.2s;
+      &:hover {
+        box-shadow: 3px 0px var(--color-black);
+      }
+    }
+  }
+
+  &-selected,
+  &-list-element {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-white);
+  }
+}

@@ -83,6 +83,17 @@
             >
               {{ product.price }} &#x20bd;
             </p>
+
+            <p v-if="!product.quantity" class="product__main-block-info-quantity">
+              Нет в наличии
+            </p>
+
+            <ColorModelSelect
+              v-if="isColorModel"
+              :color-models="product.colorModels"
+              :selected-color-model="selectedColorModel"
+              @setSelectedColorModel="setSelectedColorModel"
+            />
           </div>
         </div>
       </template></TransitionComponent
@@ -92,6 +103,7 @@
 
 <script>
 import TransitionComponent from 'Components/transition-component';
+import ColorModelSelect from 'Components/color-model-select';
 import { mapActions } from 'vuex';
 import Loader from 'Components/loader';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
@@ -105,7 +117,8 @@ export default {
     Loader,
     Swiper,
     SwiperSlide,
-    TransitionComponent
+    TransitionComponent,
+    ColorModelSelect
   },
 
   data() {
@@ -113,6 +126,7 @@ export default {
       isLoading: false,
       product: {},
       swiper: undefined,
+      mainImage: undefined,
       selectedColorModel: undefined
     };
   },
@@ -120,11 +134,16 @@ export default {
   methods: {
     ...mapActions(['GET_PRODUCT']),
 
+    setSelectedColorModel(model) {
+      this.selectedColorModel = model;
+      this.mainImage = model.image;
+    },
+
     async getProduct() {
       const res = await this.GET_PRODUCT(this.$route.params.id);
       if (res.status === 200) {
         this.product = res.data;
-        this.selectedColorModel = res.data?.mainImage;
+        this.mainImage = res.data?.mainImage;
       }
     },
 
@@ -136,6 +155,10 @@ export default {
   },
 
   computed: {
+    isColorModel() {
+      return !!this.product?.colorModels?.length;
+    },
+
     isProductSizes() {
       return this.product?.sizes?.length
     },
@@ -175,7 +198,7 @@ export default {
           return acc;
         },[]);
       }
-      return [this.selectedColorModel, ...images];
+      return [this.mainImage, ...images];
     }
   },
 
@@ -187,6 +210,10 @@ export default {
     this.$nextTick(() => {
       this.swiper = this.$refs?.swiper?.$swiper;
     });
+
+    if (this.isColorModel) {
+      this.selectedColorModel = this.product.colorModels[0];
+    }
   }
 };
 </script>

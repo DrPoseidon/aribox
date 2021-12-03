@@ -18,21 +18,7 @@ const router =  new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const {data, status} = await store.dispatch('CHECK_AUTH');
-  console.log(data, status);
-  // if(status === 401) {
-  //   await store.commit('SET_AUTH', false);
-  //   await store.dispatch('REFRESH');
-  // } else {
-  //   if(to.name === 'login' || to.name === 'registration') {
-  //     if(from.name) {
-  //       await router.push({name: from.name});
-  //     } else {
-  //       await router.push('/');
-  //     }
-  //   }
-  // }
-
+  await store.dispatch('CHECK_AUTH');
   next();
 })
 

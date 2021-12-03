@@ -21,11 +21,11 @@ module.exports = {
   },
   materials: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   description: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   price: {
     type: DataTypes.NUMBER,
@@ -35,4 +35,8 @@ module.exports = {
     type: DataTypes.NUMBER,
     allowNull: false
   },
+  quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  }
 };

@@ -32,47 +32,29 @@
       >
         {{ product.price }} &#x20bd;
       </p>
+
+      <p class="product__quantity" v-if="!product.quantity">
+        Нет в наличии
+      </p>
     </router-link>
 
-    <div v-if="isColorModel" class="product__dropdown">
-      <div
-        v-if="selectedColorModel"
-        class="product__dropdown-selected"
-        @click="dropdown = !dropdown"
-      >
-        <img class="img" :src="selectedColorModel.image" />
-        {{ selectedColorModel.colorName }}
-        <img
-          src="@/assets/icons/chevron-down.svg"
-          :class="[{ '--rotate': dropdown }, 'product__dropdown-selected-icon']"
-        />
-      </div>
-      <TransitionComponent
-        ><template>
-          <div class="product__dropdown-list" v-if="dropdown">
-            <div
-              v-for="(model, index) in getColorModel"
-              :key="index"
-              @click="listElementClick(model)"
-              class="product__dropdown-list-element"
-            >
-              <img class="img" :src="model.image" />
-              <p style="margin-right:10px">{{ model.colorName }}</p>
-            </div>
-          </div>
-        </template></TransitionComponent
-      >
-    </div>
+    <ColorModelSelect
+      v-if="isColorModel"
+      :color-models="product.colorModels"
+      :selected-color-model="selectedColorModel"
+      @setSelectedColorModel="setSelectedColorModel"
+    />
   </div>
 </template>
 
 <script>
-import TransitionComponent from 'Components/transition-component';
+import ColorModelSelect from 'Components/color-model-select';
+
 export default {
   name: 'product',
 
   components: {
-    TransitionComponent
+    ColorModelSelect
   },
 
   data() {
@@ -80,7 +62,6 @@ export default {
       mainImage: this.product.mainImage,
       mouseOver: false,
       selectedColorModel: undefined,
-      dropdown: false
     };
   },
 
@@ -93,22 +74,16 @@ export default {
 
   computed: {
     isColorModel() {
-      return !!this.product?.colorModels;
+      return !!this.product?.colorModels.length;
     },
-
-    getColorModel() {
-      return this.product.colorModels.filter((model) => {
-        return model !== this.selectedColorModel;
-      });
-    }
   },
 
   methods: {
-    listElementClick(model) {
+    setSelectedColorModel(model) {
       this.selectedColorModel = model;
       this.mainImage = model.image;
-      this.dropdown = false;
     },
+
     getHoverImage(commonImage) {
       return commonImage?.url;
     }
