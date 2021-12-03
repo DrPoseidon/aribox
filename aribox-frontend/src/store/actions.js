@@ -83,9 +83,10 @@ export default {
     }
   },
 
-  async LOGOUT({commit}) {
+  async LOGOUT({commit, state}) {
     try {
-      await AuthService.logout();
+      const {email} = state.user;
+      await AuthService.logout(email);
 
       commit('SET_USER', {});
       commit('SET_AUTH', false);
