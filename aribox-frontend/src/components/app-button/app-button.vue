@@ -3,7 +3,9 @@
         :type="type"
         class="app-button"
         @click="clicked">
-      Войти
+      <slot name="text">
+        Войти
+      </slot>
     </button>
 </template>
 

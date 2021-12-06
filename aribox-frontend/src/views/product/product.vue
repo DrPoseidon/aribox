@@ -1,124 +1,140 @@
 <template>
   <div class="product">
-    <TransitionComponent
-      ><template>
-        <Loader :isLoading="isLoading" v-if="isLoading" />
+    <Loader :isLoading="isLoading" v-if="isLoading" />
 
-        <div class="product__main-block" v-else>
-          <div class="product__main-block-mini-images" v-if="images.length > 1">
-            <img
-              :src="img"
-              class="product__main-block-mini-images-img"
-              :class="{
-                'product__main-block-mini-images-img_selected':
-                  index === activeSlide
-              }"
-              v-for="(img, index) in images"
-              :key="`img-${index}`"
-              @click="changeActiveSlide(index)"
-            />
-          </div>
+    <div class="product__main-block" v-show="!isLoading">
+      <div class="product__main-block-mini-images" v-if="images.length > 1">
+        <img
+          :src="img"
+          class="product__main-block-mini-images-img"
+          :class="{
+            'product__main-block-mini-images-img_selected':
+              index === activeSlide
+          }"
+          v-for="(img, index) in images"
+          :key="`img-${index}`"
+          @click="changeActiveSlide(index)"
+        />
+      </div>
 
-          <Swiper ref="swiper" :options="swiperOptions" class="swiper" v-if="images.length">
-            <SwiperSlide v-for="img in images" :key="img" class="swiper-slide"
-              ><img :src="img" class="swiper-img"
-            /></SwiperSlide>
+      <Swiper ref="swiper" :options="swiperOptions" class="swiper" v-show="images.length">
+        <SwiperSlide v-for="img in images" :key="img" class="swiper-slide"
+          ><img :src="img" class="swiper-img"
+        /></SwiperSlide>
 
-            <div class="swiper-pagination" slot="pagination" />
+        <div class="swiper-pagination" slot="pagination" />
 
-            <img
-              slot="button-prev"
-              src="@/assets/icons/chevron-down.svg"
-              class="swiper-button-prev swiper-button"
-              :class="{ 'swiper-button_not': activeSlide === 0 }"
-            />
+        <img
+          slot="button-prev"
+          src="@/assets/icons/chevron-down.svg"
+          class="swiper-button-prev swiper-button"
+          :class="{ 'swiper-button_not': activeSlide === 0 }"
+        />
 
-            <img
-              slot="button-next"
-              src="@/assets/icons/chevron-down.svg"
-              class="swiper-button-next swiper-button"
-              :class="{
-                'swiper-button_not': activeSlide === images.length - 1
-              }"
-            />
-          </Swiper>
+        <img
+          slot="button-next"
+          src="@/assets/icons/chevron-down.svg"
+          class="swiper-button-next swiper-button"
+          :class="{
+            'swiper-button_not': activeSlide === images.length - 1
+          }"
+        />
+      </Swiper>
 
-          <div class="product__main-block-info">
-            <h2 class="product__main-block-info-title">
-              {{ product.name }}
-            </h2>
-            <p
-              v-if="product.description"
-              class="product__main-block-info-description"
-            >
-              описание: {{ product.description }}
-            </p>
-            <p
-              v-if="product.materials"
-              class="product__main-block-info-material"
-            >
-              материал: {{ product.materials }}
-            </p>
-            <div v-if="isProductSizes">
-              <p
-                v-for="size in product.sizes"
-                :key="size.sizeId"
-                class="product__main-block-info-size"
-              >
-                размер: {{ size.size }}
-              </p>
-            </div>
-            <p
-              class="product__main-block-info-price"
-              style="margin-right:20px"
-              v-if="product.discount"
-            >
-              {{ product.discount }} &#x20bd;
-            </p>
-            <p
-              class="product__main-block-info-price"
-              :class="{
-                'product__main-block-info-price_line-through': product.discount
-              }"
-            >
-              {{ product.price }} &#x20bd;
-            </p>
-
-            <p v-if="!product.quantity" class="product__main-block-info-quantity">
-              Нет в наличии
-            </p>
-
-            <ColorModelSelect
-              v-if="isColorModel"
-              :color-models="product.colorModels"
-              :selected-color-model="selectedColorModel"
-              @setSelectedColorModel="setSelectedColorModel"
-            />
-          </div>
+      <div class="product__main-block-info">
+        <h2 class="product__main-block-info-title">
+          {{ product.name }}
+        </h2>
+        <p
+          v-if="product.description"
+          class="product__main-block-info-description"
+        >
+          описание: {{ product.description }}
+        </p>
+        <p
+          v-if="product.materials"
+          class="product__main-block-info-material"
+        >
+          материал: {{ product.materials }}
+        </p>
+        <div v-if="isProductSizes">
+          <p
+            v-for="size in product.sizes"
+            :key="size.sizeId"
+            class="product__main-block-info-size"
+          >
+            размер: {{ size.size }}
+          </p>
         </div>
-      </template></TransitionComponent
-    >
+        <p
+          class="product__main-block-info-price"
+          style="margin-right:20px"
+          v-if="product.discount"
+        >
+          {{ product.discount }} &#x20bd;
+        </p>
+        <p
+          class="product__main-block-info-price"
+          :class="{
+            'product__main-block-info-price_line-through': product.discount
+          }"
+        >
+          {{ product.price }} &#x20bd;
+        </p>
+
+        <p v-if="!product.quantity" class="product__main-block-info-quantity">
+          Нет в наличии
+        </p>
+
+        <AppButton
+          v-if="getAuth && product.quantity && !checkProduct"
+          @buttonClick="addToCart"
+          class="product__main-block-info-cart-button"
+        >
+          <template #text>
+            В корзину
+          </template>
+        </AppButton>
+
+        <AppButton
+          v-if="getAuth && product.quantity && checkProduct"
+          @buttonClick="removeFromCart"
+          class="product__main-block-info-cart-button"
+        >
+          <template #text>
+            Убрать из корзины
+          </template>
+        </AppButton>
+
+        <ColorModelSelect
+          v-if="isColorModel"
+          :color-models="product.colorModels"
+          :selected-color-model="selectedColorModel"
+          @setSelectedColorModel="setSelectedColorModel"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import TransitionComponent from 'Components/transition-component';
 import ColorModelSelect from 'Components/color-model-select';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Loader from 'Components/loader';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
+import AppButton from 'Components/app-button/app-button';
 const SWIPER_SPACE = 20;
 
 export default {
   name: 'product',
 
   components: {
+    AppButton,
     Loader,
     Swiper,
     SwiperSlide,
-    TransitionComponent,
-    ColorModelSelect
+    ColorModelSelect,
   },
 
   data() {
@@ -132,7 +148,41 @@ export default {
   },
 
   methods: {
-    ...mapActions(['GET_PRODUCT']),
+    ...mapActions(['GET_PRODUCT', 'ADD_TO_CART', 'REMOVE_FROM_CART']),
+
+    async addToCart() {
+      const product = {
+        productId: this.product.productId,
+        price: this.product.price,
+        discount: this.product.discount,
+        name: this.product.name,
+      }
+
+      if (this.selectedColorModel) {
+        product.colorModel = {
+          colorModelId: this.selectedColorModel.colorModelId,
+          colorName: this.selectedColorModel.colorName
+        };
+      }
+
+      const res = await this.ADD_TO_CART({product, userId: this.user.id});
+      console.log(res);
+    },
+
+    async removeFromCart() {
+      const product = this.cart.find(el => {
+        if(this.product.productId === el.productId) {
+          if(el.colorModel && this.selectedColorModel) {
+
+            return this.selectedColorModel.colorModelId === el.colorModel.colorModelId
+          } else {
+            return this.product.productId === el.productId;
+          }
+        }
+      });
+
+      await this.REMOVE_FROM_CART(product)
+    },
 
     setSelectedColorModel(model) {
       this.selectedColorModel = model;
@@ -149,12 +199,34 @@ export default {
 
     changeActiveSlide(index) {
       if (this.swiper) {
+
         this.swiper.slideTo(index);
       }
-    }
+    },
   },
 
   computed: {
+    ...mapState(['isAuth', 'cart', 'user']),
+
+    checkProduct() {
+      const res = this.cart.find(el => {
+        if(this.product.productId === el.productId) {
+          if(el.colorModel && this.selectedColorModel) {
+
+            return this.selectedColorModel.colorModelId === el.colorModel.colorModelId
+          } else {
+            return this.product.productId === el.productId;
+          }
+        }
+      });
+
+      return !!res;
+    },
+
+    getAuth() {
+      return this.isAuth
+    },
+
     isColorModel() {
       return !!this.product?.colorModels?.length;
     },
@@ -205,7 +277,9 @@ export default {
   async mounted() {
     this.isLoading = true;
     await this.getProduct();
-    this.isLoading = false;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 700);
 
     this.$nextTick(() => {
       this.swiper = this.$refs?.swiper?.$swiper;

@@ -102,7 +102,7 @@ export default {
           }
 
           if(res.status === 200) {
-            await this.$router.push('/');
+            document.location.href = 'http://localhost:8080/';
           }
         } catch(e) {
           console.log(e)

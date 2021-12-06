@@ -24,4 +24,10 @@ router.post('/login', UserController.login);
 
 router.post('/logout', UserController.logout);
 
+router.put('/addToCart', authMiddleware, UserController.addToCart);
+
+router.post('/getCart', authMiddleware, UserController.getCart);
+
+router.post('/removeFromCart', authMiddleware, UserController.removeFromCart);
+
 module.exports = router

@@ -80,6 +80,8 @@
     }
 
     &-info {
+      display: flex;
+      flex-direction: column;
       margin-left: 50px;
       &-price {
         font-size: 25px;
@@ -94,6 +96,10 @@
         margin-top: 20px;
         font-size: 25px;
         color: var(--color-red);
+      }
+
+      &-cart-button {
+        width: 100%;
       }
 
       &-description,

@@ -6,6 +6,18 @@ const UserSchema = new Schema({
   password: {type:String, required: true},
   isActivated: {type: Boolean, default: false},
   activationLink: {type:String, required: true},
+  cart: [
+    {
+      colorModel: {
+        colorModelId: Number,
+        colorName: String
+      },
+      discount: Number,
+      name: String,
+      price: Number,
+      productId: String
+    }
+  ]
 })
 
 module.exports = model('User', UserSchema);

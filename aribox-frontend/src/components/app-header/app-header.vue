@@ -15,9 +15,9 @@
         Название
       </router-link>
 
-      <router-link :to="{ name: 'login' }" class="app-header__links-link app-header__links-link-login" v-if="!checkAuth">
+      <a @click="login" class="app-header__links-link app-header__links-link-login" v-if="!checkAuth">
         Войти
-      </router-link>
+      </a>
 
       <a @click="logout" class="app-header__links-link app-header__links-link-login" v-if="checkAuth">
         Выйти
@@ -33,18 +33,24 @@ export default {
   name: 'app-app-header',
 
   computed:{
-    ...mapState(['isAuth']),
+    ...mapState(['isAuth', 'user']),
 
     checkAuth() {
-      return this.isAuth
-    }
+      return this.isAuth;
+    },
   },
 
   methods: {
-    ...mapActions(['LOGOUT']),
+    ...mapActions(['LOGIN','LOGOUT']),
 
     async logout() {
       await this.LOGOUT();
+
+      window.location.reload();
+    },
+
+    async login() {
+      await this.$router.push('/login');
     }
   }
 };

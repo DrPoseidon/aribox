@@ -19,6 +19,11 @@ const router =  new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   await store.dispatch('CHECK_AUTH');
+
+  if((to.name === 'login' || to.name === 'registration') && store.state.isAuth) {
+    next({name: 'main-page'});
+  }
+
   next();
 })
 
