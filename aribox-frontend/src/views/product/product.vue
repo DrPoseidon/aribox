@@ -156,6 +156,7 @@ export default {
         price: this.product.price,
         discount: this.product.discount,
         name: this.product.name,
+        mainImage: this.mainImage
       }
 
       if (this.selectedColorModel) {

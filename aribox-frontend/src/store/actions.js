@@ -75,6 +75,7 @@ export default {
         const token = refreshData.data.userData.tokens.accessToken;
         localStorage.setItem('token', token);
         commit('SET_AUTH', true);
+        window.location.reload();
       }
 
       if (state.isAuth && refreshData?.status === 401) {

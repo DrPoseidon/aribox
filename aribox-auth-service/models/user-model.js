@@ -12,10 +12,15 @@ const UserSchema = new Schema({
         colorModelId: Number,
         colorName: String
       },
+      mainImage: String,
       discount: Number,
       name: String,
       price: Number,
-      productId: String
+      productId: String,
+      quantity: {
+        type: Number,
+        default: 1
+      }
     }
   ]
 })
