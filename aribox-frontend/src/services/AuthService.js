@@ -32,4 +32,8 @@ export default  class AuthService {
   static async removeFromCart(data) {
     return await AuthApi.post('/removeFromCart', {data});
   }
+
+  static async changeProductQuantity(data) {
+    return await AuthApi.put('/changeProductQuantity', data);
+  }
 }
