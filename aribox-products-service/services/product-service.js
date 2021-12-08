@@ -146,6 +146,32 @@ class ProductService {
       return {status: 500, data: {message: 'Произошла ошибка', error: e}};
     }
   }
+
+  async getNumberOfProducts(ids) {
+    try {
+      const response = await ProductModel.findAll({
+        where: {
+          productId: ids
+        }
+      });
+
+      if(response.length) {
+        const quantity = response.reduce((acc, el) => {
+          acc.push({productId: el.productId, quantity: el.quantity})
+          return acc;
+        }, []);
+
+        return {status: 200, data: {quantity}}
+      } else {
+        return {status: 404}
+      }
+
+
+    } catch(e) {
+      console.log(e);
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
+    }
+  }
 }
 
 module.exports = new ProductService();

@@ -5,4 +5,7 @@ export default {
   SET_AUTH(state,value) {
     state.isAuth = value;
   },
+  SET_CART(state, data) {
+    state.cart = data
+  }
 };

@@ -1,0 +1,9 @@
+.cart{
+  &__body {
+    &-product{
+      &-image{
+        width: 50px;
+      }
+    }
+  }
+}

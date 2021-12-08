@@ -1,5 +1,6 @@
 const UserService = require('../services/user-service');
 const { validationResult } = require('express-validator');
+const {response} = require('express');
 
 class UserController {
   /**
@@ -60,9 +61,9 @@ class UserController {
   async logout(req,res) {
     try {
       const {email} = req.body;
-      await UserService.logout(email);
+      const response = await UserService.logout(email);
       res.clearCookie('refreshToken');
-      return res.status(200).json({message: 'Пользователь вышел из системы'});
+      return res.status(response.status).json(response.data);
     } catch(e) {
       console.log(e);
       res.status(400).json({message: 'Error'});
@@ -128,6 +129,41 @@ class UserController {
   async checkAuth(req, res) {
     try {
       return res.status(200).json({message: 'Пользователь авторизован'});
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({message: 'Error'});
+    }
+  }
+
+  async addToCart(req, res) {
+    try {
+      const {userId, product} = req.body;
+
+      const response = await UserService.addToCart(userId, product);
+
+      return res.status(response.status).json(response.data);
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({message: 'Error'});
+    }
+  }
+
+  async getCart(req, res) {
+    try {
+      const {userId} = req.body;
+      const {status, data: cart} = await UserService.getCart(userId);
+      return res.status(status).json(cart);
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({message: 'Error'});
+    }
+  }
+
+  async removeFromCart(req, res) {
+    try {
+      const {userId, product} = req.body.data;
+      const {status, data} = await UserService.removeFromCart(userId, product);
+      return res.status(status).json(data);
     } catch(e) {
       console.log(e);
       res.status(500).json({message: 'Error'});

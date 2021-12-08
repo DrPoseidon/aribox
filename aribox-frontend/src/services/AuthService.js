@@ -20,4 +20,16 @@ export default  class AuthService {
   static async logout(email){
     return await AuthApi.post('/logout', {email});
   }
+
+  static async addToCart(data) {
+    return await AuthApi.put('/addToCart', data);
+  }
+
+  static async getCart(userId) {
+    return await AuthApi.post('/getCart', {userId});
+  }
+
+  static async removeFromCart(data) {
+    return await AuthApi.post('/removeFromCart', {data});
+  }
 }

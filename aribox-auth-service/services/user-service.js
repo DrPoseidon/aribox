@@ -37,7 +37,7 @@ class UserService {
    * метод логирования
    * @param email
    * @param password
-   * @returns {Promise<{message: string, status: number}|{userData: UserDto, status: number}>}
+   * @returns {Promise<{data: {message: string}, status: number}>}
    */
   async login(email, password) {
     try {
@@ -57,7 +57,7 @@ class UserService {
         }
 
         const userData = await this.sendUser(user);
-        return {status: 200, data: {message: 'Авторизация прошла успешно', userData}};
+        return {status: 200, data: {message: 'Авторизация прошла успешно', userData, cart: user.cart}};
       } else {
         return {status: 404, data: {message: 'Пользователь с такими данными не найден'}};
       }
@@ -69,12 +69,20 @@ class UserService {
   /**
    * выход пользователя из системы (удаление токенов)
    * @param email
-   * @returns {Promise<void>}
+   * @returns {Promise<{status: number}>}
    */
   async logout(email) {
     try {
       const userData = await UserModel.findOne({email});
-      await TokenService.deleteRefreshToken(userData._id)
+
+      if(userData) {
+        await TokenService.deleteRefreshToken(userData._id);
+
+        return {status: 200, data: {message: 'Пользователь вышел из системы'}};
+      }
+
+      return {status: 500, data: {message: 'Произошла ошибка'}};
+
     } catch(e) {
       console.log(e);
     }
@@ -140,6 +148,46 @@ class UserService {
     const tokens = TokenService.generateTokens({...userDto});
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
     return {tokens, user: userDto};
+  }
+
+  async addToCart(userId, product) {
+    const userData = await UserModel.findOne({_id: userId});
+
+    if(userData){
+      userData.cart.push(product);
+
+      await userData.save();
+
+      return {status: 200, data: {message: 'Товар добавлен в корзину'}};
+    }
+
+    return {status: 404, data: {message: 'Не найден пользователь'}};
+  }
+
+  async getCart(userId) {
+    const {cart} = await UserModel.findOne({_id: userId});
+
+    if (cart) {
+      return {status: 200, data: cart};
+    } else {
+      return {status: 404};
+    }
+  }
+
+  async removeFromCart(userId, product) {
+
+    const user = await UserModel.findOne({_id: userId});
+
+    user.cart = user.cart.filter(el => {
+      if (product.colorModel && el.colorModel) {
+        return product.colorModel.colorModelId !== el.colorModel.colorModelId && product.productId !== el.productId
+      } else {
+        return product.productId !== el.productId
+      }
+    });
+
+    await user.save();
+    return {status: 200, data: {cart: user.cart}};
   }
 }
 
