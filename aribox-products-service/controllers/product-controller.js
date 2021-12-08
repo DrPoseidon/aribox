@@ -81,6 +81,17 @@ class ProductController {
       console.log(e);
     }
   }
+
+  async getNumberOfProducts(req, res) {
+    try {
+      const ids = req.body;
+      const response = await ProductService.getNumberOfProducts(ids);
+
+      res.status(response.status).json(response.data);
+    } catch(e) {
+      console.log(e);
+    }
+  }
 }
 
 module.exports = new ProductController();
