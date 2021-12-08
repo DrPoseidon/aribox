@@ -8,4 +8,8 @@ export default  class ProductsService {
   static async getProductById(id) {
     return await ProductsApi.get(`/product/${id}`);
   }
+
+  static async getNumberOfProducts(ids) {
+    return await ProductsApi.post('/getNumberOfProducts', ids);
+  }
 }

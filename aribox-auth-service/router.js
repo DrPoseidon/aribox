@@ -30,4 +30,6 @@ router.post('/getCart', authMiddleware, UserController.getCart);
 
 router.post('/removeFromCart', authMiddleware, UserController.removeFromCart);
 
+router.put('/changeProductQuantity', authMiddleware, UserController.changeProductQuantity)
+
 module.exports = router

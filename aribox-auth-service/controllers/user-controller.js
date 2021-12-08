@@ -169,6 +169,17 @@ class UserController {
       res.status(500).json({message: 'Error'});
     }
   }
+
+  async changeProductQuantity(req, res) {
+    try {
+      const {userId, product, value} = req.body;
+      const {status, data} = await UserService.changeProductQuantity(userId, product, value);
+      return res.status(status).json(data);
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({message: 'Error'});
+    }
+  }
 }
 
 module.exports = new UserController;

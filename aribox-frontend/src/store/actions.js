@@ -1,4 +1,4 @@
-import {AuthService, ProductsService} from '../services'
+import {AuthService, ProductsService} from '../services';
 
 export default {
   async GET_PRODUCTS() {
@@ -127,7 +127,7 @@ export default {
     }
   },
 
-  async GET_CART({state, commit}) {
+  async GET_CART({state, commit, dispatch}) {
     try {
       const {id} = state.user;
       const response = await AuthService.getCart(id);
@@ -135,7 +135,31 @@ export default {
       return response.status;
     } catch(e) {
       console.log(e.response);
-      return e.response;
+      if (e?.response?.status === 401) {
+        await dispatch('CHECK_AUTH');
+      }
+    }
+  },
+
+  async CHANGE_PRODUCT_QUANTITY({state, commit, dispatch}, data) {
+    try {
+      const {id} = state.user;
+      const response = await AuthService.changeProductQuantity({...data, userId: id});
+      commit('SET_CART', response.data.cart);
+      return response.status;
+    } catch(e) {
+      console.log(e.response);
+      if (e?.response?.status === 401) {
+        await dispatch('CHECK_AUTH');
+      }
+    }
+  },
+
+  async GET_NUMBER_OF_PRODUCTS(context, ids) {
+    try {
+      return await ProductsService.getNumberOfProducts(ids);
+    } catch(e) {
+      console.log(e.response);
     }
   }
 };

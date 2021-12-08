@@ -7,8 +7,8 @@
         Главная
       </router-link>
 
-      <router-link to class="app-header__links-link">
-        Название
+      <router-link :to="{ name: 'cart' }" class="app-header__links-link">
+        Корзина
       </router-link>
 
       <router-link to class="app-header__links-link">

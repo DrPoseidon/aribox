@@ -179,12 +179,20 @@ class UserService {
     const user = await UserModel.findOne({_id: userId});
 
     user.cart = user.cart.filter(el => {
-      if (product.colorModel && el.colorModel) {
-        return product.colorModel.colorModelId !== el.colorModel.colorModelId && product.productId !== el.productId
-      } else {
-        return product.productId !== el.productId
-      }
+      return el._id.toString() !== product._id
     });
+
+    await user.save();
+    return {status: 200, data: {cart: user.cart}};
+  }
+
+  async changeProductQuantity(userId, product, value) {
+    const user = await UserModel.findOne({_id: userId});
+    user.cart.forEach(el => {
+      if (el._id.toString() === product._id) {
+        el.quantity = value === 'plus' ? el.quantity +=1 : el.quantity-=1;
+      }
+    })
 
     await user.save();
     return {status: 200, data: {cart: user.cart}};

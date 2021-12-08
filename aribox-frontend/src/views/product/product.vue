@@ -174,7 +174,6 @@ export default {
       const product = this.cart.find(el => {
         if(this.product.productId === el.productId) {
           if(el.colorModel && this.selectedColorModel) {
-
             return this.selectedColorModel.colorModelId === el.colorModel.colorModelId
           } else {
             return this.product.productId === el.productId;
@@ -182,7 +181,7 @@ export default {
         }
       });
 
-      await this.REMOVE_FROM_CART(product)
+      await this.REMOVE_FROM_CART(product);
     },
 
     setSelectedColorModel(model) {
