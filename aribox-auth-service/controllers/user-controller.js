@@ -180,6 +180,36 @@ class UserController {
       res.status(500).json({message: 'Error'});
     }
   }
+
+  async checkout(req,res) {
+    try {
+      const {cart, total, id} = req.body;
+      const date = new Date().toLocaleString('ru', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        timeZone: 'UTC'
+      });
+
+      const {status, data} = await UserService.checkout(id, cart, total, date);
+      return res.status(status).json(data);
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({message: 'Error'});
+    }
+  }
+
+  async getOrders(req, res) {
+    try {
+      const {userId} = req.body;
+      const {status, data} = await UserService.getOrders(userId);
+
+      return res.status(status).json(data);
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({message: 'Error'});
+    }
+  }
 }
 
 module.exports = new UserController;

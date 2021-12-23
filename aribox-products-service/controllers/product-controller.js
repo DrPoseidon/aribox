@@ -92,6 +92,18 @@ class ProductController {
       console.log(e);
     }
   }
+
+  async changeQuantitys(req, res) {
+    try {
+      const products = req.body;
+      console.log(products)
+      const response = await ProductService.changeQuantitys(products);
+
+      return res.status(response.status).json(response.data);
+    } catch(e) {
+      console.log(e);
+    }
+  }
 }
 
 module.exports = new ProductController();

@@ -1,4 +1,12 @@
 .product {
+  .info {
+    font-size: 25px;
+    margin: 10px 0;
+    border: 1px solid green;
+    padding: 5px;
+    color: black;
+  }
+
   img {
     object-fit: cover;
   }
@@ -34,6 +42,7 @@
         }
       }
     }
+
     .swiper {
       margin: 0;
       height: 500px;
@@ -120,6 +129,20 @@
       &-description {
         max-width: 300px;
         margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .product {
+
+    &__main-block {
+      flex-direction: column;
+
+      .swiper-block {
+        width: 100%;
+        margin: 0 -100px;
       }
     }
   }

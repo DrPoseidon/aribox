@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {MainPage, Product, Login, Registration, Payment, Cart} from 'Views'
+import {MainPage, Product, Login, Registration, Payment, Cart, Orders} from 'Views'
 import store from './store';
 
 Vue.use(VueRouter);
@@ -14,7 +14,8 @@ const router =  new VueRouter({
     { path: '/login', name: 'login', component: Login },
     { path: '/registration', name: 'registration', component: Registration },
     {path: '/payment', name: 'payment', component: Payment},
-    {path: '/cart', name: 'cart', component: Cart}
+    {path: '/cart', name: 'cart', component: Cart},
+    {path: '/orders', name: 'orders', component: Orders}
   ]
 });
 
@@ -25,7 +26,7 @@ router.beforeEach(async (to, from, next) => {
     next({name: 'main-page'});
   }
 
-  if(to.name === 'cart' && !store.state.isAuth) {
+  if((to.name === 'cart' || to.name === 'orders') && !store.state.isAuth) {
     next({name: 'main-page'});
   }
 

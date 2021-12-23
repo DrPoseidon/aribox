@@ -197,6 +197,34 @@ class UserService {
     await user.save();
     return {status: 200, data: {cart: user.cart}};
   }
+
+  async checkout(userId, cart, total, date) {
+    const userData = await UserModel.findOne({_id: userId});
+    if(userData){
+      userData.orders.push({cart, total, date, id: uuid.v4()});
+      userData.cart = [];
+
+      await userData.save();
+
+      return {status: 200, data: {message: 'Заказ сформирован'}};
+    }
+
+    return {status: 404, data: {message: 'Не найден пользователь'}};
+  }
+
+  async getOrders(userId) {
+    try {
+      const userData = await UserModel.findOne({_id: userId});
+      if(userData) {
+
+        return {status:200, data:{orders:userData.orders}};
+      } else {
+        return {status: 404, data: {message: 'Не найден пользователь'}};
+      }
+    } catch(e) {
+      return {status: 500, data:{message: 'Произошла ошибка'}};
+    }
+  }
 }
 
 module.exports = new UserService();

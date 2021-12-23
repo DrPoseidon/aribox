@@ -43,9 +43,19 @@
       </div>
 
       <div class="cart__body-total">
-        Итого: {{getTotal}} &#x20bd;
+        <div >
+          Итого: {{getTotal}} &#x20bd;
+        </div>
+
+        <AppButton @buttonClick="checkout">
+          <template #text>
+            Оформить заказ
+          </template>
+        </AppButton>
       </div>
     </div>
+
+
 
   </div>
 </template>
@@ -54,11 +64,13 @@
 import Loader from 'Components/loader';
 
 import {mapActions, mapState} from 'vuex';
+import AppButton from '../../components/app-button/app-button';
 
 export default {
   name: "cart",
 
   components: {
+    AppButton,
     Loader
   },
 
@@ -85,7 +97,13 @@ export default {
   },
 
   methods:{
-    ...mapActions(['GET_CART', 'REMOVE_FROM_CART', 'CHANGE_PRODUCT_QUANTITY', 'GET_NUMBER_OF_PRODUCTS']),
+    ...mapActions(['GET_CART', 'REMOVE_FROM_CART', 'CHANGE_PRODUCT_QUANTITY', 'GET_NUMBER_OF_PRODUCTS', 'CHECKOUT']),
+
+    async checkout() {
+      console.log('checkout')
+      const res = await this.CHECKOUT(this.getTotal);
+      console.log(res);
+    },
 
     increment(product) {
       if (this.quantity.length) {

@@ -161,5 +161,35 @@ export default {
     } catch(e) {
       console.log(e.response);
     }
+  },
+
+  async CHECKOUT({commit, state}, total) {
+    try {
+      const {cart, user} = state;
+
+      const {status} =  await AuthService.checkout({cart, total, id: user.id});
+
+      if(status === 200) {
+        await commit('SET_CART', []);
+
+        await ProductsService.changeQuantitys(cart);
+
+        return 200
+      }
+    } catch(e) {
+      console.log(e.response);
+    }
+  },
+
+  async GET_ORDERS({state}) {
+    try {
+      const {id} = state.user;
+
+      const {data} = await AuthService.getOrders({userId: id});
+
+      return data?.orders;
+    } catch (e) {
+      console.log(e.response)
+    }
   }
 };

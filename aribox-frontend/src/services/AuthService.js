@@ -36,4 +36,12 @@ export default  class AuthService {
   static async changeProductQuantity(data) {
     return await AuthApi.put('/changeProductQuantity', data);
   }
+
+  static async checkout(data) {
+    return await AuthApi.post('/checkout', data)
+  }
+
+  static async getOrders(data) {
+    return await AuthApi.post('/getOrders', data);
+  }
 }

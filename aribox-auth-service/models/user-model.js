@@ -6,6 +6,10 @@ const UserSchema = new Schema({
   password: {type:String, required: true},
   isActivated: {type: Boolean, default: false},
   activationLink: {type:String, required: true},
+  orders: {
+    type: Array,
+    default: []
+  },
   cart: [
     {
       colorModel: {
@@ -20,7 +24,7 @@ const UserSchema = new Schema({
       quantity: {
         type: Number,
         default: 1
-      }
+      },
     }
   ]
 })

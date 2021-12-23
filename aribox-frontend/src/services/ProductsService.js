@@ -12,4 +12,8 @@ export default  class ProductsService {
   static async getNumberOfProducts(ids) {
     return await ProductsApi.post('/getNumberOfProducts', ids);
   }
+
+  static async changeQuantitys(products) {
+    return await ProductsApi.post('/changeQuantitys', products)
+  }
 }

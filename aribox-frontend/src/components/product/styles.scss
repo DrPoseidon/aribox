@@ -1,8 +1,8 @@
 .product {
   &__mainImage,
   &__mainImage-commonImage {
-    height: 400px;
-    width: 300px;
+    width: 100%;
+    aspect-ratio: 3/4;
     background-size: cover;
     background-position: center;
   }
@@ -22,7 +22,6 @@
   }
 
   &__dropdown {
-    width: 80%;
     margin-top: 10px;
     font-size: 20px;
     position: relative;

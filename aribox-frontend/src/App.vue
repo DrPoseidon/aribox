@@ -1,12 +1,14 @@
 <template>
   <div id="app">
     <Header v-if="!routes.includes(this.$route.name)"/>
-    <router-view />
+    <router-view :style="{'margin-top': isLaptop ? '0px' : '70px'}" class="router-view"/>
   </div>
 </template>
 
 <script>
 import Header from 'Components/app-header';
+
+const LAPTOP_WIDTH = 1024;
 
 export default {
   name: 'App',
@@ -17,8 +19,27 @@ export default {
 
   data() {
     return {
-      routes: ['login', 'registration', 'payment']
+      routes: ['login', 'registration', 'payment'],
+      isLaptop: false,
     }
+  },
+
+  methods: {
+    resize() {
+      if (window.innerWidth < LAPTOP_WIDTH) {
+        // если размер окна меньше LAPTOP_WIDTH (1024)
+        this.isLaptop = false;
+      }
+      if (window.innerWidth >= LAPTOP_WIDTH) {
+        // если размер окна больше LAPTOP_WIDTH (1024)
+        this.isLaptop = true;
+      }
+    }
+  },
+
+  mounted() {
+    this.resize();
+    window.addEventListener('resize', this.resize);
   }
 };
 </script>
@@ -35,6 +56,11 @@ export default {
 body {
   background-color: var(--color-primary);
 }
+
+.router-view {
+  margin: 0 100px;
+}
+
 a {
   text-decoration: none;
   color: var(--color-black);

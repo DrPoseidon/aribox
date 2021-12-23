@@ -3,43 +3,45 @@
     <Loader :isLoading="isLoading" v-if="isLoading" />
 
     <div class="product__main-block" v-show="!isLoading">
-      <div class="product__main-block-mini-images" v-if="images.length > 1">
-        <img
-          :src="img"
-          class="product__main-block-mini-images-img"
-          :class="{
+      <div style="display:flex;" class="swiper-block">
+        <div class="product__main-block-mini-images" v-if="images.length > 1">
+          <img
+            :src="img"
+            class="product__main-block-mini-images-img"
+            :class="{
             'product__main-block-mini-images-img_selected':
               index === activeSlide
           }"
-          v-for="(img, index) in images"
-          :key="`img-${index}`"
-          @click="changeActiveSlide(index)"
-        />
-      </div>
+            v-for="(img, index) in images"
+            :key="`img-${index}`"
+            @click="changeActiveSlide(index)"
+          />
+        </div>
 
-      <Swiper ref="swiper" :options="swiperOptions" class="swiper" v-show="images.length">
-        <SwiperSlide v-for="img in images" :key="img" class="swiper-slide"
+        <Swiper ref="swiper" :options="swiperOptions" class="swiper" v-show="images.length">
+          <SwiperSlide v-for="img in images" :key="img" class="swiper-slide"
           ><img :src="img" class="swiper-img"
-        /></SwiperSlide>
+          /></SwiperSlide>
 
-        <div class="swiper-pagination" slot="pagination" />
+          <div class="swiper-pagination" slot="pagination" />
 
-        <img
-          slot="button-prev"
-          src="@/assets/icons/chevron-down.svg"
-          class="swiper-button-prev swiper-button"
-          :class="{ 'swiper-button_not': activeSlide === 0 }"
-        />
+          <img
+            slot="button-prev"
+            src="@/assets/icons/chevron-down.svg"
+            class="swiper-button-prev swiper-button"
+            :class="{ 'swiper-button_not': activeSlide === 0 }"
+          />
 
-        <img
-          slot="button-next"
-          src="@/assets/icons/chevron-down.svg"
-          class="swiper-button-next swiper-button"
-          :class="{
+          <img
+            slot="button-next"
+            src="@/assets/icons/chevron-down.svg"
+            class="swiper-button-next swiper-button"
+            :class="{
             'swiper-button_not': activeSlide === images.length - 1
           }"
-        />
-      </Swiper>
+          />
+        </Swiper>
+      </div>
 
       <div class="product__main-block-info">
         <h2 class="product__main-block-info-title">
@@ -112,6 +114,10 @@
           :selected-color-model="selectedColorModel"
           @setSelectedColorModel="setSelectedColorModel"
         />
+
+        <div v-if="!getAuth" class="info">
+          Чтобы добавить товар в корзину - авторизуйтесь
+        </div>
       </div>
     </div>
   </div>

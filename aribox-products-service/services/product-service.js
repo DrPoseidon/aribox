@@ -172,6 +172,25 @@ class ProductService {
       return {status: 500, data: {message: 'Произошла ошибка', error: e}};
     }
   }
+
+  async changeQuantitys(products) {
+    try {
+      for (const product of products) {
+        const productData = await ProductModel.findOne({where: {productId: product.productId}});
+
+        if(productData.quantity > 0) {
+          await productData.update({quantity: productData.quantity - product.quantity});
+        }
+      }
+
+      return {status: 200, data: {message: 'Успех!'}};
+
+
+    } catch(e) {
+      console.log(e);
+      return {status: 500, data: {message: 'Произошла ошибка', error: e}};
+    }
+  }
 }
 
 module.exports = new ProductService();
