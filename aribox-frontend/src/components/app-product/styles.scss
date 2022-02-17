@@ -1,4 +1,6 @@
-.product {
+.app-product {
+  font-size: 15px;
+
   &__mainImage,
   &__mainImage-commonImage {
     width: 100%;
@@ -17,7 +19,6 @@
   }
 
   &__quantity {
-    font-size: 25px;
     color: var(--color-red);
   }
 

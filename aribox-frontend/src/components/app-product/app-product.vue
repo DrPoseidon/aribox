@@ -1,9 +1,9 @@
 <template>
-  <div class="product">
+  <div class="app-product">
     <router-link :to="{ name: 'product', params: { id: product.productId } }">
       <div
         :style="{ backgroundImage: `url('${mainImage}')` }"
-        class="product__mainImage"
+        class="app-product__mainImage"
         @mouseover="mouseOver = true"
         @mouseleave="mouseOver = false"
       >
@@ -13,27 +13,30 @@
             :style="{
               backgroundImage: `url('${getHoverImage(product.commonImages[0])}')`
             }"
-            class="product__mainImage-commonImage"
+            class="app-product__mainImage-commonImage"
           />
         </transition>
       </div>
 
-      <h2>{{ product.name }}</h2>
-      <p
-        class="product__price"
-        style="margin-right:20px"
-        v-if="product.discount"
-      >
-        {{ product.discount }} &#x20bd;
-      </p>
-      <p
-        class="product__price"
-        :class="{ 'product__price_line-through': product.discount }"
-      >
-        {{ product.price }} &#x20bd;
-      </p>
+      <span>{{ product.name }}</span>
 
-      <p class="product__quantity" v-if="!product.quantity">
+      <div>
+        <p
+          class="app-product__price"
+          style="margin-right:20px"
+          v-if="product.discount"
+        >
+          {{ product.discount }} &#x20bd;
+        </p>
+        <p
+          class="app-product__price"
+          :class="{ 'app-product__price_line-through': product.discount }"
+        >
+          {{ product.price }} &#x20bd;
+        </p>
+      </div>
+
+      <p class="app-product__quantity" v-if="!product.quantity">
         Нет в наличии
       </p>
     </router-link>
@@ -51,7 +54,7 @@
 import ColorModelSelect from 'Components/color-model-select';
 
 export default {
-  name: 'product',
+  name: 'app-product',
 
   components: {
     ColorModelSelect

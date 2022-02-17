@@ -15,15 +15,27 @@ class UserService {
    */
   async registration(email, name, password) {
     try {
-      const exists = await UserModel.findOne({email});
+      const exists = await UserModel.findOne({ email });
 
       if(!exists) {
         // если пользователя с таким email нет в системе
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4();
 
-        await MailService.sendActivationMail(email, `${process.env.SERVER_URL}/api/activate/${activationLink}`);
-        const user = await UserModel.create({email, name, password: hashPassword, activationLink});
+        try {
+          await MailService.sendActivationMail(email, `${process.env.SERVER_URL}/api/activate/${activationLink}`);
+        } catch (e) {
+          console.log(e, 1);
+          return {status: 500, data: {message: 'Произошла ошибка'}}
+        }
+
+        try {
+          await UserModel.create({email, name, password: hashPassword, activationLink});
+        } catch (e) {
+          console.log(e, 2);
+          return {status: 500, data: {message: 'Произошла ошибка'}}
+        }
+
         return {status: 200, data: {message: 'Регистрация прошла успешно'}};
       } else {
         return {status: 400, data: {message: 'Пользователь с такими данными уже существует'}};

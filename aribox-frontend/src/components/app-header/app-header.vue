@@ -1,58 +1,50 @@
 <template>
   <div class="app-header">
-    <div v-if="isLaptop" class="laptop-header">
-      <img src="@/assets/img/logo.png" class="app-header__logo" />
+    <div v-if="isLaptop" class="app-header__laptop">
+      <router-link :to="{ name: 'main-page' }">
+        <img src="@/assets/img/Home.svg" class="app-header__laptop-logo" />
+      </router-link>
 
-      <div class="app-header__links">
-        <router-link :to="{ name: 'main-page' }" class="app-header__links-link">
-          Главная
+      <div class="app-header__laptop-links">
+        <router-link v-for="link in routerLinks" :key="link.name" :to="{ name: link.name }">
+          {{ link.text }}
         </router-link>
-
-        <router-link :to="{ name: 'cart' }" class="app-header__links-link">
-          Корзина
-        </router-link>
-
-        <router-link :to="{name: 'orders'}" class="app-header__links-link">
-          Заказы
-        </router-link>
-
-        <a @click="login" class="app-header__links-link app-header__links-link-login" v-if="!checkAuth">
-          Войти
-        </a>
-
-        <a @click="logout" class="app-header__links-link app-header__links-link-login" v-if="checkAuth">
-          Выйти
-        </a>
       </div>
-    </div>
 
-    <div v-if="!isLaptop" class="burger-header">
-      <img src="@/assets/icons/burger.svg" @click="showMobileHeader = !showMobileHeader">
-    </div>
+<!--      <a @click="burgerClick" class="app-header__laptop-burger">-->
+<!--        <img src="@/assets/icons/burger.svg" class="app-header__laptop-burger-icon">-->
+<!--      </a>-->
 
-    <div v-if="!isLaptop" class="mobile-header" :style="{right: showMobileHeader ? '0px' : '-200px'}">
-      <img src="@/assets/img/logo.png" class="app-header__logo" />
-
-      <router-link :to="{ name: 'main-page' }" class="app-header__links-link">
-        Главная
-      </router-link>
-
-      <router-link :to="{ name: 'cart' }" class="app-header__links-link">
-        Корзина
-      </router-link>
-
-      <router-link :to="{name: 'orders'}" class="app-header__links-link">
-        Заказы
-      </router-link>
-
-      <a @click="login" class="app-header__links-link app-header__links-link-login" v-if="!checkAuth">
+      <a @click="login" class="app-header__laptop-login" v-if="!checkAuth">
         Войти
       </a>
 
-      <a @click="logout" class="app-header__links-link app-header__links-link-login" v-if="checkAuth">
+      <a @click="logout" class="app-header__laptop-login" v-if="checkAuth">
         Выйти
       </a>
     </div>
+
+<!--    <div v-if="!isLaptop" class="burger-header">-->
+<!--      <img src="@/assets/icons/burger.svg" @click="showMobileHeader = !showMobileHeader">-->
+<!--    </div>-->
+
+<!--    <div v-if="!isLaptop" class="mobile-header" :style="{right: showMobileHeader ? '0px' : '-200px'}">-->
+<!--      <img src="@/assets/img/logo.png" class="app-header__logo" />-->
+
+<!--      <router-link :to="{ name: 'main-page' }" class="app-header__links-link">-->
+<!--        Главная-->
+<!--      </router-link>-->
+
+<!--      <router-link :to="{ name: 'cart' }" class="app-header__links-link">-->
+<!--        Корзина-->
+<!--      </router-link>-->
+
+<!--      <router-link :to="{name: 'orders'}" class="app-header__links-link">-->
+<!--        Заказы-->
+<!--      </router-link>-->
+
+
+<!--    </div>-->
   </div>
 </template>
 
@@ -77,10 +69,31 @@ export default {
     checkAuth() {
       return this.isAuth;
     },
+
+    routerLinks() {
+      return [
+        {
+          text: 'Товары',
+          name: 'products'
+        },
+        {
+          text: 'Корзина',
+          name: 'cart'
+        },
+        {
+          text: 'Заказы',
+          name: 'orders'
+        }
+      ]
+    }
   },
 
   methods: {
     ...mapActions(['LOGIN','LOGOUT']),
+
+    burgerClick() {
+
+    },
 
     async logout() {
       await this.LOGOUT();

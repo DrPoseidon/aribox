@@ -1,9 +1,11 @@
 const Router = require('express').Router;
 const router = new Router;
 const UserController = require('./controllers/user-controller');
+const InstaController = require('./controllers/insta-photos-controller');
 const authMiddleware = require('./middlewares/auth-middleware');
 const {check} = require('express-validator');
 
+// эндпоинт регистрации, с проверкой валидности email, пароля и имени
 router.post('/registration',
   check('email', 'Email не может быть пустым').notEmpty(),
   check('password', 'Пароль должен быть больше 4 и меньше 30 символов')
@@ -12,10 +14,14 @@ router.post('/registration',
     .isLength({min: 3}),
   UserController.registration);
 
+// эндпоинт обновления токенов
 router.post('/refresh', UserController.refresh);
 
+
+// эндпоинт проверки авторизованности
 router.post('/checkAuth', authMiddleware, UserController.checkAuth);
 
+//
 router.get('/activate/:activationLink', UserController.activate);
 
 router.get('/users', authMiddleware, UserController.getAllUsers);
@@ -35,5 +41,9 @@ router.put('/changeProductQuantity', authMiddleware, UserController.changeProduc
 router.post('/checkout', authMiddleware, UserController.checkout);
 
 router.post('/getOrders', authMiddleware, UserController.getOrders);
+
+router.post('/setInstaPhotos', InstaController.setPhotos);
+
+router.get('/getInstaPhotos', InstaController.getPhotos);
 
 module.exports = router

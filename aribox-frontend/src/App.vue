@@ -57,10 +57,6 @@ body {
   background-color: var(--color-primary);
 }
 
-.router-view {
-  margin: 0 100px;
-}
-
 a {
   text-decoration: none;
   color: var(--color-black);
@@ -70,7 +66,6 @@ a {
   }
 }
 #app {
-  font-family: 'Cormorant', sans-serif;
-  margin: 0 40px;
+  font-family: 'Montserrat', sans-serif;
 }
 </style>

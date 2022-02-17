@@ -20,7 +20,8 @@
 
         <Swiper ref="swiper" :options="swiperOptions" class="swiper" v-show="images.length">
           <SwiperSlide v-for="img in images" :key="img" class="swiper-slide"
-          ><img :src="img" class="swiper-img"
+          >
+            <img :src="img" class="swiper-img"
           /></SwiperSlide>
 
           <div class="swiper-pagination" slot="pagination" />

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {MainPage, Product, Login, Registration, Payment, Cart, Orders} from 'Views'
+import { MainPage, Product, Login, Registration, Payment, Cart, Orders, Products } from 'Views'
 import store from './store';
 
 Vue.use(VueRouter);
@@ -12,6 +12,7 @@ const router =  new VueRouter({
     { path: '/', component: MainPage, name: 'main-page' },
     { path: '/product/:id', name: 'product', component: Product },
     { path: '/login', name: 'login', component: Login },
+    { path: '/products', name: 'products', component: Products },
     { path: '/registration', name: 'registration', component: Registration },
     {path: '/payment', name: 'payment', component: Payment},
     {path: '/cart', name: 'cart', component: Cart},

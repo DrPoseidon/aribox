@@ -1,13 +1,13 @@
 <template>
   <div class="registration">
-
     <TransitionComponent>
       <template>
         <Loader :isLoading="isLoading" v-if="isLoading"/>
 
         <form v-else @submit.prevent="sendData" class="registration__form">
-          <img src="@/assets/img/logo.png" class="registration__form-logo"/>
-
+          <span class="registration__form-error">
+            {{error}}
+          </span>
 
           <AppInput
               label="Введите имя"
@@ -63,7 +63,8 @@ export default {
         email: '',
         password: '',
         passwordConfirm: ''
-      }
+      },
+      error: '',
     }
   },
 

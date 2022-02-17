@@ -1,0 +1,27 @@
+.products {
+  margin: 10px 200px;
+
+  &__items{
+    &-list {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 25%);
+      width: 100%;
+      column-gap: 20px;
+      row-gap: 30px;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      &-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &-product {
+          width: 70%;
+        }
+      }
+    }
+  }
+}

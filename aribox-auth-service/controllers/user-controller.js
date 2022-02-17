@@ -1,6 +1,5 @@
 const UserService = require('../services/user-service');
 const { validationResult } = require('express-validator');
-const {response} = require('express');
 
 class UserController {
   /**
