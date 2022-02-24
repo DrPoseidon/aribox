@@ -25,7 +25,7 @@
       </Swiper>
     </div>
 
-    <div class="main-page__about-me">
+    <div class="main-page__about-me" >
       <div class="main-page__about-me-text">
         <span>
           Давайте знакомиться?
@@ -48,7 +48,17 @@
         class="main-page__instagram-feed-loader"
       />
 
-      <div v-else>
+      <div v-if="!imagesAreLoading" class="main-page__instagram-feed-subscribe-button">
+        <AppButton class="main-page__instagram-feed-subscribe-button-button" @buttonClick="goToInstagram">
+          Подписаться
+        </AppButton>
+
+        <span class="main-page__instagram-feed-subscribe-button-text">
+          Мы в instagram
+        </span>
+      </div>
+
+      <div v-if="!imagesAreLoading" class="grid-block">
         <a v-for="img in instaImages" :key="img.id" class="main-page__instagram-feed-item" target="_blank" :href="img.permalink" @mouseenter="hoverId = img.id" @mouseleave="hoverId = ''">
           <img :src="img.mediaUrl" class="main-page__instagram-feed-item-img">
 
@@ -73,14 +83,15 @@ import { getImages } from '../../api/InstagramAPI';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
 import TransitionComponent from 'Components/transition-component/transition-component';
+import AppButton from '../../components/app-button/app-button';
 const SWIPER_SPACE = 20;
-
-
+const instaUrl = 'https://www.instagram.com/aribox.lip/';
 
 export default {
   name: 'main-page',
 
   components: {
+    AppButton,
     TransitionComponent,
     Swiper,
     SwiperSlide,
@@ -97,6 +108,9 @@ export default {
 
   computed: {
     getImages() {
+      /**
+       * TODO: Нужно будет заменить
+       */
       return ['img-1.jpg', 'img-2.webp'];
     },
 
@@ -118,6 +132,10 @@ export default {
   },
 
   methods: {
+    goToInstagram() {
+      window.open(instaUrl, '_blank');
+    },
+
     bgImage (img) {
       return require(`@/assets/img/main-banner/${img}`)
     },

@@ -3,7 +3,7 @@
         :type="type"
         class="app-button"
         @click="clicked">
-      <slot name="text">
+      <slot>
         Войти
       </slot>
     </button>

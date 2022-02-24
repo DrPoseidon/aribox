@@ -53,13 +53,28 @@ $header-height: 134px;
   }
 
   &__instagram-feed {
-    margin-bottom: 10px;
+    margin: 50px 0 20px 0;
+
+    &-subscribe-button {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      margin-bottom: 50px;
+
+      &-text {
+        font-size: 30px;
+      }
+
+      &-button {
+        margin-left: 20px;
+      }
+    }
 
     &-loader {
       margin: 20px 0;
     }
 
-    > div {
+    .grid-block {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       column-gap: 10px;
@@ -120,7 +135,7 @@ $header-height: 134px;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 10px 0;
+    margin-top: 20px;
 
     &-img {
       height: 500px;

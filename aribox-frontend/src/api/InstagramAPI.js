@@ -11,10 +11,11 @@ export const getImages = async () => {
 
   try {
     const response = await AuthApi.get('/getInstaPhotos');
-    console.log(response)
+
     if (response.status === 200) {
       const { data } = response;
-      if (data.date - dateNow >= nextDayValue || !Object.keys(data).length) {
+
+      if (dateNow - data.date >= nextDayValue || !Object.keys(data).length) {
         get = true;
         const res = await axios.get(`https://graph.instagram.com/me?fields=id,username,media&access_token=${accessToken}`);
         if (res?.status === 200) {
@@ -48,5 +49,7 @@ export const getImages = async () => {
     }
   }
 
+
+  console.log(photos);
   return photos;
 };

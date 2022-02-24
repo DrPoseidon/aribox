@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose');
 
 const InstaPhotosSchema = new Schema({
-  date: String,
+  date: Number,
   photos: [
     {
       id: {

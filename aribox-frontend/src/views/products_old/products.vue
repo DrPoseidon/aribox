@@ -1,10 +1,6 @@
 <template>
   <div class="products">
     <div class="products__items">
-      <h2 style="text-align: center">
-        ГОСТИНАЯ
-      </h2>
-
       <TransitionComponent>
         <template>
           <Loader :isLoading="isLoading" v-if="isLoading"/>

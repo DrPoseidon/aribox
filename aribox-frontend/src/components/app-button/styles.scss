@@ -1,20 +1,18 @@
 .app-button {
-    margin-top: 20px;
-    cursor: pointer;
-    width: 50%;
-    height: 40px;
-    border: 1px solid var(--color-brown);
-    background-color: transparent;
-    color: var(--color-brown);
-    font-size: 16px;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid var(--color-brown);
+  background-color: transparent;
+  color: var(--color-brown);
+  font-size: 16px;
 
-    transition: 0.2s ease all;
-    -moz-transition: 0.2s ease all;
-    -webkit-transition: 0.2s ease all;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
 
-    &:hover {
-      background-color: var(--color-dropdown-2);
-      border-color: var(--color-dropdown-2);
-      color: var(--color-white);
-    }
+  &:hover {
+    background-color: var(--color-dropdown-2);
+    border-color: var(--color-dropdown-2);
+    color: var(--color-white);
+  }
 }

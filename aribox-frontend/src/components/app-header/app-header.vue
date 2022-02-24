@@ -11,40 +11,28 @@
         </router-link>
       </div>
 
-<!--      <a @click="burgerClick" class="app-header__laptop-burger">-->
-<!--        <img src="@/assets/icons/burger.svg" class="app-header__laptop-burger-icon">-->
+      <a @click="burgerClick" class="app-header__laptop-burger">
+        <img src="@/assets/icons/burger.svg" class="app-header__laptop-burger-icon">
+      </a>
+
+<!--      <a @click="login" class="app-header__laptop-login" v-if="!checkAuth">-->
+<!--        Войти-->
 <!--      </a>-->
 
-      <a @click="login" class="app-header__laptop-login" v-if="!checkAuth">
-        Войти
-      </a>
-
-      <a @click="logout" class="app-header__laptop-login" v-if="checkAuth">
-        Выйти
-      </a>
+<!--      <a @click="logout" class="app-header__laptop-login" v-if="checkAuth">-->
+<!--        Выйти-->
+<!--      </a>-->
     </div>
 
-<!--    <div v-if="!isLaptop" class="burger-header">-->
-<!--      <img src="@/assets/icons/burger.svg" @click="showMobileHeader = !showMobileHeader">-->
-<!--    </div>-->
+    <div class="app-header__laptop-mini" :style="getMiniHeaderStyles">
+      <router-link :to="{ name: 'main-page' }">
+        <img src="@/assets/img/Home-white.svg" class="app-header__laptop-mini-logo" />
+      </router-link>
 
-<!--    <div v-if="!isLaptop" class="mobile-header" :style="{right: showMobileHeader ? '0px' : '-200px'}">-->
-<!--      <img src="@/assets/img/logo.png" class="app-header__logo" />-->
-
-<!--      <router-link :to="{ name: 'main-page' }" class="app-header__links-link">-->
-<!--        Главная-->
-<!--      </router-link>-->
-
-<!--      <router-link :to="{ name: 'cart' }" class="app-header__links-link">-->
-<!--        Корзина-->
-<!--      </router-link>-->
-
-<!--      <router-link :to="{name: 'orders'}" class="app-header__links-link">-->
-<!--        Заказы-->
-<!--      </router-link>-->
-
-
-<!--    </div>-->
+      <a @click="burgerClick" class="app-header__laptop-mini-burger">
+        <img src="@/assets/icons/burger-white.svg" class="app-header__laptop-mini-burger-icon">
+      </a>
+    </div>
   </div>
 </template>
 
@@ -58,18 +46,54 @@ export default {
 
   data() {
     return {
+      /**
+       * флаг того, является ли разрешение больше 1024px
+       */
       isLaptop: false,
+      /**
+       * флаг отображения мобильного хедера
+       */
       showMobileHeader: false,
+      /**
+       * позиция хедера на экране по y
+       */
+      headerPosition: undefined,
+      /**
+       * высота блока мини хедера
+       */
+      miniHeaderLength: 0
     }
   },
 
   computed:{
     ...mapState(['isAuth', 'user']),
 
+    /**
+     * получение стилей мини хедера
+     * @returns {{}}
+     */
+    getMiniHeaderStyles() {
+      const styles = {};
+
+      if (this.headerPosition >= 0) {
+        styles.top = `-${this.miniHeaderLength}px`;
+      }
+
+      return styles;
+    },
+
+    /**
+     * проверка на авторизацию
+     * @returns {boolean}
+     */
     checkAuth() {
       return this.isAuth;
     },
 
+    /**
+     * ссылки хедера
+     * @returns {[{name: string, text: string}, {name: string, text: string}, {name: string, text: string}]}
+     */
     routerLinks() {
       return [
         {
@@ -91,16 +115,26 @@ export default {
   methods: {
     ...mapActions(['LOGIN','LOGOUT']),
 
+    /**
+     * событие по нажатии на бургер-батн
+     */
     burgerClick() {
 
     },
 
+    /**
+     * выход из системы
+     * @returns {Promise<void>}
+     */
     async logout() {
       await this.LOGOUT();
-
       window.location.reload();
     },
 
+    /**
+     * переход на страницу логина
+     * @returns {Promise<void>}
+     */
     async login() {
       await this.$router.push('/login');
     },
@@ -117,12 +151,23 @@ export default {
         // если размер окна больше LAPTOP_WIDTH (1024)
         this.isLaptop = true;
       }
+    },
+
+    /**
+     * функция, вызываемая при скролле
+     */
+    scroll() {
+      const header = document.querySelector('.app-header');
+      this.headerPosition = header.getBoundingClientRect().bottom + this.miniHeaderLength;
     }
   },
 
   mounted() {
+    this.miniHeaderLength = document.querySelector('.app-header__laptop-mini')?.clientHeight;
     this.resize();
+    this.scroll();
     window.addEventListener('resize', this.resize);
+    window.addEventListener('scroll', this.scroll)
   }
 };
 </script>
